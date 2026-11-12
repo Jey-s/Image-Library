@@ -3,403 +3,418 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#050505">
-<title>Asset Library Pro</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23050505'/%3E%3Crect x='14' y='14' width='22' height='30' rx='5' fill='%236366f1'/%3E%3Crect x='30' y='24' width='22' height='26' rx='5' fill='%238b5cf6'/%3E%3C/svg%3E">
+<title>My Image Board</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
   :root {
-    --bg-base: #050505;
-    --surface: rgba(255, 255, 255, 0.03);
-    --surface-hover: rgba(255, 255, 255, 0.06);
-    --border: rgba(255, 255, 255, 0.08);
-    --border-highlight: rgba(255, 255, 255, 0.2);
-    --text-main: #ffffff;
-    --text-muted: #8892b0;
-    --accent-1: #6366f1; /* Indigo */
-    --accent-2: #8b5cf6; /* Violet */
-    --font-heading: 'Outfit', sans-serif;
-    --font-ui: 'Inter', sans-serif;
-    --col: 280px; 
-    --gap: 24px;
-    --radius-lg: 16px;
-    --radius-md: 12px;
-    --radius-sm: 8px;
-    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --bg-page: #f3f4f6;
+    --bg-content: #ffffff;
+    --border-color: #d1d5db;
+    --text-main: #374151;
+    --text-muted: #6b7280;
+    --link-color: #0366d6;
+    --link-hover: #0056b3;
+    --accent: #2e8b57; /* Classic image-board green */
+    --accent-hover: #246b43;
+    --header-bg: #24292e;
+    --sidebar-width: 260px;
   }
 
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; color-scheme: dark; scrollbar-gutter: stable; }
-  html:has(dialog[open]) { overflow: hidden; }
-  ::selection { background: var(--accent-1); color: #fff; }
-
+  
   body {
-    margin: 0; min-height: 100vh;
-    background-color: var(--bg-base);
+    margin: 0; 
+    background-color: var(--bg-page);
     color: var(--text-main);
-    font: 400 14px/1.6 var(--font-ui);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    font-family: 'Open Sans', Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  /* ---------- Header ---------- */
+  header {
+    background-color: var(--header-bg);
+    color: #fff;
+    padding: 0 20px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .logo {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #fff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo span { color: var(--accent); }
+
+  /* ---------- Main Layout ---------- */
+  .container {
+    max-width: 1600px;
+    margin: 20px auto;
+    padding: 0 20px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    width: var(--sidebar-width);
+    flex-shrink: 0;
+    background: var(--bg-content);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 15px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 70px;
+  }
+
+  .box-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0 0 12px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .search-box {
+    margin-bottom: 25px;
+  }
+
+  #search {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    font-size: 13px;
+    font-family: inherit;
+  }
+  #search:focus { outline: none; border-color: var(--link-color); }
+
+  .tag-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 25px 0;
+  }
+
+  .tag-list li {
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .tag-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--link-color);
+    cursor: pointer;
+    font-size: 13px;
+    font-family: inherit;
+    text-align: left;
+  }
+  .tag-btn:hover { text-decoration: underline; color: var(--link-hover); }
+  .tag-btn.active { font-weight: 700; color: var(--text-main); text-decoration: none; cursor: default; }
+
+  .tag-count {
+    color: var(--text-muted);
+    font-size: 11px;
+    background: #f3f4f6;
+    padding: 2px 6px;
+    border-radius: 10px;
+  }
+
+  .stats {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* ---------- Gallery / Main Content ---------- */
+  .main-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .page-title {
+    margin: 0 0 15px 0;
+    font-size: 24px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .status-text {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+
+  #gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+  }
+
+  /* Image Board Card Style */
+  .thumb-card {
+    background: var(--bg-content);
+    border: 1px solid var(--border-color);
+    padding: 6px;
+    border-radius: 3px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.2s;
+  }
+  .thumb-card:hover { border-color: var(--link-color); }
+
+  .img-wrap {
+    width: 100%;
+    aspect-ratio: 1; /* Classic square thumbnails */
+    background: #e5e7eb;
+    display: block;
+    cursor: pointer;
+    overflow: hidden;
     position: relative;
   }
 
-  /* Ambient glowing orbs */
-  body::before {
-    content: ''; position: fixed; top: -10%; left: -10%; width: 50vw; height: 50vh;
-    background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 60%);
-    z-index: -1; filter: blur(60px); pointer-events: none;
-  }
-  body::after {
-    content: ''; position: fixed; bottom: -10%; right: -10%; width: 60vw; height: 60vh;
-    background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 60%);
-    z-index: -1; filter: blur(60px); pointer-events: none;
-  }
-
-  /* Noise texture for premium feel */
-  .noise {
-    position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0.025;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  }
-
-  * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
-  ::-webkit-scrollbar { width: 8px; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--border-highlight); }
-
-  .wrap { max-width: 1600px; margin: 0 auto; padding: 0 clamp(24px, 5vw, 64px); }
-
-  /* ---------- Hero ---------- */
-  header { padding: clamp(60px, 10vw, 120px) 0 clamp(40px, 6vw, 80px); position: relative; }
-  .hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 60px; align-items: center; }
-
-  h1 {
-    margin: 0; font-family: var(--font-heading); font-weight: 700;
-    font-size: clamp(48px, 6vw, 84px); line-height: 1.05; letter-spacing: -0.03em;
-    background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    animation: fadeUp 0.8s var(--ease-out) forwards;
-  }
-  
-  #status { 
-    margin: 24px 0 0; color: var(--text-muted); font-size: clamp(16px, 1.5vw, 20px); 
-    font-weight: 300; max-width: 480px; line-height: 1.5;
-    animation: fadeUp 0.8s var(--ease-out) 0.1s forwards; opacity: 0;
-  }
-
-  .facts { list-style: none; margin: 32px 0 0; padding: 0; display: flex; gap: 12px; flex-wrap: wrap; animation: fadeUp 0.8s var(--ease-out) 0.2s forwards; opacity: 0; }
-  .facts li {
-    display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px;
-    border: 1px solid var(--border); border-radius: 99px; font-size: 13px; font-weight: 500;
-    background: var(--surface); backdrop-filter: blur(12px); color: var(--text-muted);
-  }
-  .facts i { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 10px currentColor; }
-  .facts b { color: var(--text-main); font-weight: 600; }
-
-  .how { list-style: none; margin: 40px 0 0; padding: 0; display: grid; gap: 16px; animation: fadeUp 0.8s var(--ease-out) 0.3s forwards; opacity: 0; }
-  .how li { display: flex; align-items: center; gap: 16px; font-size: 14px; color: #a1a1aa; }
-  .how span {
-    flex: none; width: 36px; height: 36px; display: grid; place-items: center;
-    border-radius: var(--radius-sm); background: var(--surface); border: 1px solid var(--border);
-    transition: background 0.3s, border-color 0.3s;
-  }
-  .how li:hover span { background: rgba(99, 102, 241, 0.1); border-color: rgba(99, 102, 241, 0.3); }
-  .how svg { width: 16px; height: 16px; stroke: var(--text-main); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
-  /* Animated Hero Stack */
-  .stack { position: relative; height: 460px; width: 100%; max-width: 540px; justify-self: end; perspective: 1000px; animation: fadeUp 1s var(--ease-out) 0.2s forwards; opacity: 0; }
-  .tile {
-    position: absolute; left: var(--x); top: var(--y); rotate: var(--r);
-    transform: translateZ(0) translate(calc(var(--mx, 0) * var(--d, 24) * 1px), calc(var(--my, 0) * var(--d, 24) * 1px));
-    width: 50%; aspect-ratio: 4/5; object-fit: cover; display: block;
-    border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-lg); background: #111;
-    box-shadow: 0 24px 48px -12px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05) inset;
-    animation: settle 1.2s var(--ease-out) backwards;
-    animation-delay: calc((var(--i) * 150ms) + 400ms);
-    transition: transform 0.6s var(--ease-out), filter 0.6s var(--ease-out);
-    filter: brightness(0.8) grayscale(20%);
-  }
-  .stack:hover .tile { filter: brightness(0.6) grayscale(50%); }
-  .stack .tile:hover { transform: translateZ(40px) translateY(-10px); z-index: 10; filter: brightness(1.1) grayscale(0%); border-color: rgba(255,255,255,0.3); }
-  .tile:nth-child(1) { --x: 5%;  --y: 10%; --r: -8deg; --d: -40; }
-  .tile:nth-child(2) { --x: 35%; --y: 0%;  --r: 4deg;  --d: 25; }
-  .tile:nth-child(3) { --x: 50%; --y: 30%; --r: 9deg;  --d: 50; }
-  .tile:nth-child(4) { --x: 15%; --y: 45%; --r: -4deg; --d: -20; }
-
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes settle { from { opacity: 0; transform: translateY(60px) scale(0.9); rotate: 0deg; } }
-
-  /* ---------- Floating Navigation Bar ---------- */
-  .bar-container { position: sticky; top: 24px; z-index: 40; padding: 0 clamp(24px, 5vw, 64px); pointer-events: none; }
-  .bar {
-    pointer-events: auto; max-width: 1600px; margin: 0 auto;
-    background: rgba(15, 15, 15, 0.6); backdrop-filter: blur(24px) saturate(1.5); -webkit-backdrop-filter: blur(24px) saturate(1.5);
-    border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-    display: flex; align-items: center; gap: 16px 24px; flex-wrap: wrap; padding: 12px 16px;
-  }
-
-  .search { position: relative; flex: 1 1 280px; max-width: 400px; }
-  .search svg {
-    position: absolute; left: 16px; top: 50%; translate: 0 -50%; width: 18px; height: 18px;
-    stroke: var(--text-muted); fill: none; stroke-width: 2; transition: stroke 0.3s; pointer-events: none;
-  }
-  .search:focus-within svg { stroke: var(--accent-1); }
-  #search {
-    width: 100%; height: 44px; padding: 0 44px; border-radius: var(--radius-md);
-    background: rgba(0,0,0,0.2); border: 1px solid transparent; color: var(--text-main);
-    font: inherit; font-size: 14px; transition: all 0.3s var(--ease-out);
-  }
-  #search::placeholder { color: var(--text-muted); }
-  #search:focus { outline: none; border-color: var(--accent-1); background: rgba(99, 102, 241, 0.05); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15); }
-  #search::-webkit-search-cancel-button { display: none; }
-  
-  .hint {
-    position: absolute; right: 12px; top: 50%; translate: 0 -50%; font-size: 11px; font-weight: 600; color: var(--text-muted);
-    border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; pointer-events: none; background: var(--surface);
+  .img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
     transition: opacity 0.2s;
   }
-  #search:not(:placeholder-shown) ~ .hint { opacity: 0; }
+  .img-wrap:hover img { opacity: 0.9; }
 
-  .tabs { display: flex; gap: 6px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; mask-image: linear-gradient(to right, #000 90%, transparent); }
-  .tabs::-webkit-scrollbar { display: none; }
-  .tab {
-    height: 38px; padding: 0 18px; border: 1px solid transparent; border-radius: var(--radius-md); background: transparent;
-    color: var(--text-muted); font: 500 14px var(--font-ui); cursor: pointer; white-space: nowrap; transition: all 0.2s;
-  }
-  .tab sup { font-size: 10px; margin-left: 6px; font-weight: 600; opacity: 0.6; }
-  .tab:hover { color: var(--text-main); background: var(--surface); }
-  .tab[aria-pressed="true"] { 
-    color: #fff; background: var(--surface-hover); border-color: var(--border-highlight);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
+  .meta {
+    padding-top: 6px;
+    font-size: 11px;
+    line-height: 1.4;
+    word-break: break-all;
   }
 
-  .size { display: flex; align-items: center; gap: 12px; margin-left: auto; color: var(--text-muted); padding: 0 8px; }
-  .size svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
-  .size svg:last-child { width: 18px; height: 18px; }
-  .size input { width: 100px; height: 4px; border-radius: 2px; appearance: none; background: var(--border); outline: none; }
-  .size input::-webkit-slider-thumb { appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--text-main); cursor: pointer; transition: transform 0.2s; }
-  .size input::-webkit-slider-thumb:hover { transform: scale(1.2); background: var(--accent-1); }
-
-  /* ---------- Gallery Masonry ---------- */
-  main { padding: clamp(40px, 6vw, 60px) 0 120px; }
-  #gallery { column-width: var(--col); column-gap: var(--gap); }
-
-  figure { 
-    position: relative; margin: 0 0 var(--gap); break-inside: avoid; 
-    border-radius: var(--radius-lg); overflow: hidden; background: var(--surface);
-    border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    transform: translateZ(0); transition: border-color 0.4s, box-shadow 0.4s, transform 0.4s var(--ease-out);
+  .meta-title {
+    color: var(--text-main);
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  figure:hover { border-color: var(--border-highlight); box-shadow: 0 12px 32px rgba(0,0,0,0.4); transform: translateY(-4px); z-index: 2; }
-  
-  .frame { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; line-height: 0; }
-  .frame:focus-visible { outline-offset: -4px; border-radius: var(--radius-lg); outline: 2px solid var(--accent-1); }
-  .frame img { width: 100%; height: auto; display: block; opacity: 0; filter: blur(10px); transform: scale(1.05); transition: opacity 0.6s ease, filter 0.6s ease, transform 0.8s var(--ease-out); }
-  .frame img.ready { opacity: 1; filter: blur(0); transform: scale(1); }
-  figure:hover .frame img.ready { transform: scale(1.03); }
-  .loading { min-height: 200px; }
 
-  .sk::before {
-    content: ""; position: absolute; inset: 0;
-    background: linear-gradient(110deg, transparent 40%, rgba(255,255,255,0.04) 50%, transparent 60%) 150% 0 / 200% 100% no-repeat;
-    animation: sweep 1.5s infinite linear;
+  .meta-tag {
+    color: var(--accent);
+    font-weight: 600;
+    display: inline-block;
   }
-  @keyframes sweep { to { background-position: -50% 0; } }
 
-  /* Glassmorphic Caption Overlay */
-  .cap {
-    position: absolute; inset: auto 0 0 0; padding: 40px 16px 16px;
-    display: flex; align-items: flex-end; justify-content: space-between; gap: 12px;
-    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
-    opacity: 0; transform: translateY(10px); transition: all 0.3s var(--ease-out); pointer-events: none;
+  .actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
   }
-  figure:hover .cap, figure:focus-within .cap { opacity: 1; transform: translateY(0); }
-  @media (hover: none) { .cap { opacity: 1; transform: translateY(0); } }
-
-  .cap-text { min-width: 0; line-height: 1.3; }
-  .cap-name { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-  .cap-folder { font-size: 12px; color: var(--accent-1); font-weight: 500; margin-top: 2px; }
-  .cap-actions { display: flex; gap: 8px; pointer-events: auto; flex: none; }
-
-  .icon {
-    width: 36px; height: 36px; display: grid; place-items: center;
-    border-radius: 50%; border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(0,0,0,0.4); color: var(--text-main); cursor: pointer;
-    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    transition: all 0.2s;
+  .action-link {
+    color: var(--link-color);
+    cursor: pointer;
+    font-size: 11px;
+    text-decoration: none;
   }
-  .icon:hover { background: #fff; color: #000; transform: translateY(-2px); border-color: #fff; }
-  .icon.ok { background: #10b981; color: #fff; border-color: #10b981; }
-  .icon svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .action-link:hover { text-decoration: underline; }
 
-  .empty { column-span: all; padding: 120px 0; text-align: center; color: var(--text-muted); font: 400 24px var(--font-heading); }
+  .empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 50px;
+    background: var(--bg-content);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+  }
 
-  /* ---------- Cinematic Lightbox ---------- */
+  /* ---------- Lightbox (Image Viewer) ---------- */
   dialog {
-    border: 0; padding: 0; background: transparent; color: var(--text-main);
-    width: 100vw; max-width: 100vw; height: 100vh; max-height: 100vh; height: 100dvh; max-height: 100dvh;
+    border: none;
+    padding: 0;
+    background: rgba(0, 0, 0, 0.85);
+    width: 100vw; max-width: 100vw;
+    height: 100vh; max-height: 100vh;
+    color: #fff;
   }
-  dialog::backdrop { background: rgba(5,5,5,0.85); backdrop-filter: blur(16px); }
-  dialog[open], dialog[open]::backdrop { animation: veil 0.4s var(--ease-out) forwards; }
-  @keyframes veil { from { opacity: 0; backdrop-filter: blur(0px); } to { opacity: 1; backdrop-filter: blur(16px); } }
-
-  .lb { height: 100%; display: grid; grid-template-rows: 1fr auto; padding: 24px clamp(16px, 4vw, 64px); gap: 24px; }
-  .lb-stage { position: relative; min-height: 0; display: grid; place-items: center; }
-  .lb-stage img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: var(--radius-lg); box-shadow: 0 40px 100px -10px rgba(0,0,0,0.8); }
-
-  .nav { position: absolute; top: 50%; translate: 0 -50%; width: 56px; height: 56px; background: var(--surface); border: 1px solid var(--border); }
-  .nav:hover { background: #fff; color: #000; }
-  .nav.prev { left: -12px; } .nav.next { right: -12px; }
-  .nav svg { width: 24px; height: 24px; }
-
-  .lb-foot { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; background: rgba(0,0,0,0.4); padding: 20px 24px; border-radius: 24px; border: 1px solid var(--border); backdrop-filter: blur(20px); }
-  .lb-name { margin: 0; font: 600 20px/1.3 var(--font-heading); overflow-wrap: anywhere; }
-  .lb-count { color: var(--text-muted); font-size: 13px; font-weight: 500; margin-top: 4px; }
-  .lb-count span { margin-left: 12px; padding-left: 12px; border-left: 1px solid var(--border); }
-
-  .pill {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 12px 24px; border-radius: 99px; border: 1px solid var(--border);
-    background: rgba(255,255,255,0.05); color: var(--text-main); font: 600 14px var(--font-ui); cursor: pointer;
-    transition: all 0.2s;
+  dialog::backdrop { background: rgba(0, 0, 0, 0.85); }
+  
+  .lb-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
   }
-  .pill:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); transform: translateY(-2px); }
-  .pill.main { background: #fff; border-color: #fff; color: #000; }
-  .pill.main:hover { background: #e5e5e5; }
-  .pill.ok { background: #10b981; border-color: #10b981; color: #fff; }
-  .pill svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .lb-actions { display: flex; gap: 12px; }
 
-  /* ---------- Toast Notification ---------- */
+  .lb-header {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0,0,0,0.5);
+  }
+
+  .lb-info { font-size: 14px; }
+  .lb-info span { color: #a1a1aa; margin-left: 10px; }
+
+  .lb-close {
+    background: none; border: 1px solid #fff; color: #fff;
+    padding: 5px 15px; cursor: pointer; border-radius: 3px;
+    font-size: 12px;
+  }
+  .lb-close:hover { background: #fff; color: #000; }
+
+  .lb-content {
+    flex: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 0; /* allows child img to shrink */
+  }
+
+  .lb-content img {
+    max-width: 95%;
+    max-height: 95%;
+    object-fit: contain;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    background: #fff; /* In case of transparent PNGs */
+  }
+
+  .lb-nav {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 15%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0);
+    font-size: 40px;
+    font-weight: bold;
+    transition: color 0.2s, background 0.2s;
+  }
+  .lb-nav:hover { color: rgba(255,255,255,0.8); }
+  .lb-nav.prev { left: 0; background: linear-gradient(to right, rgba(0,0,0,0.4), transparent); }
+  .lb-nav.next { right: 0; background: linear-gradient(to left, rgba(0,0,0,0.4), transparent); }
+
+  /* ---------- Toast ---------- */
   #toast {
-    position: fixed; left: 50%; bottom: 32px; z-index: 100;
-    translate: -50% 20px; opacity: 0; pointer-events: none;
-    background: #fff; color: #000; padding: 12px 24px; border-radius: 99px;
-    font-weight: 600; font-size: 14px; box-shadow: 0 16px 40px rgba(0,0,0,0.5);
-    transition: all 0.4s var(--ease-out);
+    position: fixed; bottom: 20px; right: 20px;
+    background: var(--accent); color: #fff;
+    padding: 10px 20px; border-radius: 3px;
+    font-size: 13px; font-weight: 600;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 100;
   }
-  #toast.show { opacity: 1; translate: -50% 0; }
-
-  /* ---------- Accessibility ---------- */
-  button:focus-visible, input:focus-visible { outline: 2px solid var(--accent-1); outline-offset: 4px; border-radius: var(--radius-sm); }
-  .icon:focus-visible { border-radius: 50%; }
-
-  @media (prefers-reduced-motion: reduce) {
-    * { transition-duration: .01ms !important; animation: none !important; scroll-behavior: auto !important; }
-    dialog[open]::backdrop { animation: none; }
-  }
+  #toast.show { opacity: 1; }
 
   @media (max-width: 768px) {
-    :root { --col: 160px; --gap: 16px; }
-    .hero { grid-template-columns: 1fr; gap: 40px; text-align: center; }
-    #status { margin-left: auto; margin-right: auto; }
-    .facts { justify-content: center; }
-    .how { margin-left: auto; margin-right: auto; max-width: max-content; text-align: left; }
-    .stack { justify-self: center; height: 380px; margin-top: 20px; }
-    .size, .hint { display: none; }
-    .bar-container { padding: 0 16px; top: 16px; }
-    .nav { width: 44px; height: 44px; }
-    .nav.prev { left: 0; } .nav.next { right: 0; }
-    .lb-foot { flex-direction: column; align-items: flex-start; border-radius: 16px; }
-    .lb-actions { width: 100%; }
-    .pill { flex: 1; justify-content: center; }
+    .container { flex-direction: column; }
+    .sidebar { width: 100%; position: static; }
+    #gallery { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+    .lb-nav { width: 25%; }
   }
 </style>
 </head>
 
 <body>
-<div class="noise"></div>
 
 <header>
-  <div class="wrap hero">
-    <div>
-      <h1>Asset Library Pro</h1>
-      <p id="status" aria-live="polite">Initializing workspace…</p>
-      <ul class="facts" id="facts"></ul>
-      <ul class="how">
-        <li><span><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/></svg></span>Hover a media asset to copy its direct link</li>
-        <li><span><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></span>Click to inspect in cinematic full-screen view</li>
-        <li><span><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span>Press / to quick-search the entire database</li>
-      </ul>
-    </div>
-    <div class="stack" id="stack" aria-hidden="true"></div>
-  </div>
+  <a href="#" class="logo">Zero<span>Library</span></a>
 </header>
 
-<div class="bar-container">
-  <div class="bar">
-    <label class="search">
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input id="search" type="search" placeholder="Search your assets..." autocomplete="off" aria-label="Search images and GIFs">
-      <span class="hint" aria-hidden="true">/</span>
-    </label>
-    <div class="tabs" id="tabs" role="group" aria-label="Filter by folder"></div>
-    <label class="size" title="Adjust thumbnail scale">
-      <svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
-      <input id="size" type="range" min="150" max="450" step="10" value="280" aria-label="Thumbnail size">
-      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/></svg>
-    </label>
-  </div>
+<div class="container">
+  <!-- Left Sidebar -->
+  <aside class="sidebar">
+    <div class="search-box">
+      <h3 class="box-title">Search</h3>
+      <input id="search" type="search" placeholder="Search filename..." autocomplete="off">
+    </div>
+
+    <div>
+      <h3 class="box-title">Tags (Folders)</h3>
+      <ul class="tag-list" id="tag-list">
+        <!-- Folders inject here -->
+      </ul>
+    </div>
+
+    <div class="stats" id="stats">
+      <!-- Stats inject here -->
+    </div>
+  </aside>
+
+  <!-- Main Grid -->
+  <main class="main-content">
+    <h1 class="page-title">
+      <span id="current-folder">All Images</span>
+      <span class="status-text" id="status">Loading library...</span>
+    </h1>
+    
+    <div id="gallery">
+      <!-- Images inject here -->
+    </div>
+  </main>
 </div>
 
-<main>
-  <div class="wrap">
-    <div id="gallery"></div>
-  </div>
-</main>
-
-<dialog id="lightbox" aria-label="Image preview">
-  <div class="lb">
-    <div class="lb-stage">
-      <button class="icon nav prev" id="prev" aria-label="Previous image"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button>
-      <img id="lbImg" alt="">
-      <button class="icon nav next" id="next" aria-label="Next image"><svg viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></svg></button>
+<!-- Lightbox -->
+<dialog id="lightbox">
+  <div class="lb-layout">
+    <div class="lb-header">
+      <div class="lb-info">
+        <span id="lb-name" style="color:#fff; margin:0;">filename.jpg</span>
+        <span id="lb-count">1 of 10</span>
+      </div>
+      <button class="lb-close" id="lb-close">Close (ESC)</button>
     </div>
-    <div class="lb-foot">
-      <div>
-        <p class="lb-name" id="lbName"></p>
-        <div class="lb-count" id="lbCount"></div>
-      </div>
-      <div class="lb-actions">
-        <button class="pill main" id="lbCopy"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/></svg><span>Copy Link</span></button>
-        <button class="pill" id="lbClose">Close</button>
-      </div>
+    <div class="lb-content">
+      <div class="lb-nav prev" id="prev">‹</div>
+      <img id="lb-img" alt="">
+      <div class="lb-nav next" id="next">›</div>
     </div>
   </div>
 </dialog>
 
-<div id="toast" role="status" aria-live="polite"></div>
+<div id="toast"></div>
 
 <script>
-// CHANGE THESE THREE VALUES
+// CONFIGURATION
 const USERNAME = "Jey-s";
 const REPOSITORY = "Image-Library";
 const BRANCH = "Images";
-
-// GitHub Pages address
 const BASE_URL = `https://${USERNAME}.github.io/${REPOSITORY}/`;
-
-// Supported image formats
 const EXTENSIONS = /\.(jpg|jpeg|png|gif|webp|avif|svg|bmp)$/i;
 
+// DOM Elements
 const $ = id => document.getElementById(id);
 const gallery = $("gallery"), statusEl = $("status"), search = $("search"),
-      tabsEl = $("tabs"), lightbox = $("lightbox"), toast = $("toast"), size = $("size"),
-      lbImg = $("lbImg"), lbCopy = $("lbCopy"), COPY_HTML = lbCopy.innerHTML;
+      tagList = $("tag-list"), stats = $("stats"), currentFolder = $("current-folder"),
+      lightbox = $("lightbox"), lbImg = $("lb-img"), toast = $("toast");
 
-const ICON_COPY = '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/></svg>';
-const ICON_OPEN = '<svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg>';
-const ICON_OK = '<svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
-
-const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
-const FAILS = {
-  403: "GitHub API rate limit exceeded. Please wait a moment and reload.",
-  404: "Repository configuration error. Verify USERNAME, REPOSITORY, and BRANCH."
-};
-
-let items = [], view = [], activeFolder = "All", current = 0, toastTimer, empty;
+let items = [], view = [], activeFolder = "All", current = 0, toastTimer, emptyEl;
 
 const urlFor = p => BASE_URL + p.split("/").map(encodeURIComponent).join("/");
 const folderOf = p => p.includes("/") ? p.split("/")[0] : "Root";
@@ -411,28 +426,25 @@ function say(msg) {
   toastTimer = setTimeout(() => toast.classList.remove("show"), 2000);
 }
 
-async function copyLink(path, btn, idleHTML) {
+async function copyLink(path) {
   try {
     await navigator.clipboard.writeText(urlFor(path));
-    say("Asset link copied to clipboard");
-    btn.classList.add("ok");
-    btn.innerHTML = btn.classList.contains("pill") ? ICON_OK + "<span>Copied</span>" : ICON_OK;
-    setTimeout(() => { btn.classList.remove("ok"); btn.innerHTML = idleHTML; }, 2000);
+    say("URL copied to clipboard.");
   } catch {
-    window.prompt("Manual Copy Required:", urlFor(path));
+    window.prompt("Copy this URL:", urlFor(path));
   }
 }
 
 async function loadImages() {
   try {
     const api = `https://api.github.com/repos/${USERNAME}/${REPOSITORY}/git/trees/${encodeURIComponent(BRANCH)}?recursive=1`;
-    const response = await fetch(api).catch(() => { throw new Error("Network error. Unable to connect to GitHub API."); });
-    if (!response.ok) throw new Error(FAILS[response.status] || `API Error (HTTP ${response.status}). Please reload.`);
+    const response = await fetch(api);
+    if (!response.ok) throw new Error(`GitHub API Error (${response.status})`);
     const data = await response.json();
-    if (data.truncated) throw new Error("Repository size limit exceeded. Please fragment assets across multiple repos.");
+    
     items = data.tree.filter(f => f.type === "blob" && EXTENSIONS.test(f.path));
-    renderTabs();
-    renderHero();
+    
+    renderSidebar();
     buildGallery();
     renderGallery();
   } catch (error) {
@@ -441,173 +453,138 @@ async function loadImages() {
   }
 }
 
-function renderTabs() {
+function renderSidebar() {
   const counts = {};
   items.forEach(f => { const k = folderOf(f.path); counts[k] = (counts[k] || 0) + 1; });
-  tabsEl.innerHTML = "";
+  
+  tagList.innerHTML = "";
   ["All", ...Object.keys(counts).sort()].forEach(name => {
-    const b = document.createElement("button");
-    b.className = "tab";
-    b.setAttribute("aria-pressed", String(name === activeFolder));
-    b.innerHTML = `${name}<sup>${name === "All" ? items.length : counts[name]}</sup>`;
-    b.onclick = () => { activeFolder = name; renderTabs(); renderGallery(); };
-    tabsEl.appendChild(b);
+    const li = document.createElement("li");
+    const btn = document.createElement("button");
+    btn.className = "tag-btn" + (name === activeFolder ? " active" : "");
+    btn.textContent = name;
+    btn.onclick = () => { 
+      activeFolder = name; 
+      search.value = ""; 
+      currentFolder.textContent = name === "All" ? "All Images" : name;
+      renderSidebar(); 
+      renderGallery(); 
+    };
+    
+    const count = document.createElement("span");
+    count.className = "tag-count";
+    count.textContent = name === "All" ? items.length : counts[name];
+    
+    li.append(btn, count);
+    tagList.appendChild(li);
   });
+
+  stats.innerHTML = `Total files: ${items.length}<br>Total tags: ${Object.keys(counts).length}`;
 }
 
-function renderHero() {
-  const gifs = items.filter(f => /\.gif$/i.test(f.path)).length;
-  const folders = new Set(items.map(f => folderOf(f.path))).size;
-  $("facts").innerHTML = [["accent-1", items.length - gifs, "Image"], ["accent-2", gifs, "Animation"], ["text-main", folders, "Directory"]]
-    .filter(f => f[1])
-    .map(([c, n, w]) => `<li><i style="background:var(--${c}); color:var(--${c})"></i><b>${n}</b> ${w}${n === 1 ? "" : "s"}</li>`).join("");
-  const n = Math.min(4, items.length);
-  $("stack").innerHTML = Array.from({ length: n }, (_, k) => items[Math.floor(k * items.length / n)])
-    .map((f, k) => `<img class="tile" style="--i:${k}" src="${urlFor(f.path)}" alt="">`).join("");
-}
-
-function iconBtn(label, html, onclick) {
-  const b = document.createElement("button");
-  b.className = "icon"; b.type = "button";
-  b.setAttribute("aria-label", label); b.title = label;
-  b.innerHTML = html; b.onclick = onclick;
-  return b;
-}
-
+// Build DOM elements once
 function buildGallery() {
   gallery.innerHTML = "";
   items.forEach(file => {
     const parts = file.path.split("/"), base = parts.pop();
-    const fig = file.el = document.createElement("figure");
-    fig.className = "loading";
+    const folder = parts.length ? parts.join("/") : "Root";
 
-    const frame = document.createElement("button");
-    frame.className = "frame"; frame.type = "button";
-    frame.setAttribute("aria-label", `Preview ${file.path}`);
+    const card = file.el = document.createElement("div");
+    card.className = "thumb-card";
+
+    const imgWrap = document.createElement("a");
+    imgWrap.className = "img-wrap";
+    imgWrap.onclick = () => openLightbox(view.indexOf(file));
+    
     const img = document.createElement("img");
-    img.alt = file.path; img.loading = "lazy"; img.decoding = "async";
-    const done = () => { img.classList.add("ready"); fig.classList.remove("loading"); };
-    img.onload = done; img.onerror = done;
+    img.loading = "lazy";
     img.src = urlFor(file.path);
-    frame.appendChild(img);
-    frame.onclick = () => openLightbox(view.indexOf(file));
+    imgWrap.appendChild(img);
 
-    const cap = document.createElement("div");
-    cap.className = "cap";
-    const text = document.createElement("div");
-    text.className = "cap-text";
-    text.innerHTML = '<div class="cap-name"></div>' + (parts.length ? '<div class="cap-folder"></div>' : "");
-    text.firstChild.textContent = base;
-    if (parts.length) text.lastChild.textContent = parts.join("/");
+    const meta = document.createElement("div");
+    meta.className = "meta";
+    meta.innerHTML = `
+      <span class="meta-tag">${folder}</span><br>
+      <span class="meta-title" title="${base}">${base}</span>
+    `;
 
     const actions = document.createElement("div");
-    actions.className = "cap-actions";
-    const copy = iconBtn("Copy link", ICON_COPY, () => copyLink(file.path, copy, ICON_COPY));
-    const open = iconBtn("Open externally", ICON_OPEN, () => window.open(urlFor(file.path), "_blank", "noopener"));
-    actions.append(copy, open);
+    actions.className = "actions";
+    
+    const copyBtn = document.createElement("span");
+    copyBtn.className = "action-link";
+    copyBtn.textContent = "[Copy Link]";
+    copyBtn.onclick = () => copyLink(file.path);
 
-    cap.append(text, actions);
-    fig.append(frame, cap);
-    gallery.appendChild(fig);
+    const openBtn = document.createElement("a");
+    openBtn.className = "action-link";
+    openBtn.textContent = "[Full]";
+    openBtn.href = urlFor(file.path);
+    openBtn.target = "_blank";
+
+    actions.append(copyBtn, openBtn);
+    meta.appendChild(actions);
+
+    card.append(imgWrap, meta);
+    gallery.appendChild(card);
   });
 
-  empty = document.createElement("div");
-  empty.className = "empty"; empty.hidden = true;
-  gallery.appendChild(empty);
+  emptyEl = document.createElement("div");
+  emptyEl.className = "empty";
+  emptyEl.hidden = true;
+  gallery.appendChild(emptyEl);
 }
 
 function renderGallery() {
-  if (!empty) return;
+  if (!emptyEl) return;
   const q = search.value.trim().toLowerCase();
-  view = items.filter(f =>
+  
+  view = items.filter(f => 
     (activeFolder === "All" || folderOf(f.path) === activeFolder) &&
-    f.path.toLowerCase().includes(q));
+    f.path.toLowerCase().includes(q)
+  );
+  
   const shown = new Set(view);
-  items.forEach(f => { f.el.hidden = !shown.has(f); });
+  items.forEach(f => { f.el.style.display = shown.has(f) ? "flex" : "none"; });
 
-  statusEl.textContent = !items.length
-    ? `Database empty. Awaiting file population in branch: ${BRANCH}.`
-    : (q || activeFolder !== "All")
-      ? `Displaying ${view.length} of ${items.length} indexed assets.`
-      : "Complete asset index loaded and synchronized.";
-
-  empty.hidden = view.length > 0 || !items.length;
-  empty.textContent = q
-    ? `Query "${search.value.trim()}" returned 0 results.`
-    : "Directory is currently empty.";
+  statusEl.textContent = `Showing ${view.length} results`;
+  
+  emptyEl.hidden = view.length > 0;
+  emptyEl.textContent = "No images found for this criteria.";
 }
 
+/* ---------- Lightbox ---------- */
 function showAt(i) {
   if (!view.length) return;
   current = (i + view.length) % view.length;
   const f = view[current];
   lbImg.src = urlFor(f.path);
-  lbImg.alt = f.path;
-  $("lbName").textContent = f.path;
-  $("lbCount").textContent = `${current + 1} of ${view.length}`;
-  lbCopy.onclick = () => copyLink(f.path, lbCopy, COPY_HTML);
-  [1, -1].forEach(d => { new Image().src = urlFor(view[(current + d + view.length) % view.length].path); });
+  $("lb-name").textContent = f.path;
+  $("lb-count").textContent = `${current + 1} of ${view.length}`;
 }
 
-lbImg.onload = () => {
-  const { naturalWidth: w, naturalHeight: h } = lbImg;
-  if (w) $("lbCount").innerHTML = `${current + 1} of ${view.length}<span>${w} × ${h} px</span>`;
-  if (!calm) lbImg.animate({ opacity: [0, 1], transform: ["scale(0.95)", "scale(1)"] }, { duration: 400, easing: "cubic-bezier(0.16, 1, 0.3, 1)" });
-};
-
-function openLightbox(i) { showAt(i); lightbox.showModal(); }
+function openLightbox(i) { 
+  showAt(i); 
+  lightbox.showModal(); 
+}
 
 $("prev").onclick = () => showAt(current - 1);
 $("next").onclick = () => showAt(current + 1);
-$("lbClose").onclick = () => lightbox.close();
-lightbox.addEventListener("click", e => { if (e.target === lightbox || e.target.classList.contains("lb-stage")) lightbox.close(); });
+$("lb-close").onclick = () => lightbox.close();
+lightbox.addEventListener("click", e => { 
+  if (e.target === lightbox || e.target.classList.contains("lb-content")) lightbox.close(); 
+});
 lightbox.addEventListener("close", () => { lbImg.removeAttribute("src"); });
 
-let touchX = 0;
-lightbox.addEventListener("touchstart", e => { touchX = e.changedTouches[0].clientX; }, { passive: true });
-lightbox.addEventListener("touchend", e => {
-  const dx = e.changedTouches[0].clientX - touchX;
-  if (Math.abs(dx) > 50) showAt(current + (dx < 0 ? 1 : -1));
-}, { passive: true });
-
+// Keyboard controls
 document.addEventListener("keydown", e => {
   if (lightbox.open) {
     if (e.key === "ArrowLeft") showAt(current - 1);
     if (e.key === "ArrowRight") showAt(current + 1);
-  } else if (e.key === "/" && document.activeElement !== search) {
-    e.preventDefault(); search.focus();
   }
 });
 
 search.addEventListener("input", renderGallery);
-search.addEventListener("keydown", e => {
-  if (e.key === "Escape") { search.value = ""; search.blur(); renderGallery(); }
-});
-
-const applySize = v => document.documentElement.style.setProperty("--col", v + "px");
-try { const s = localStorage.getItem("thumbSize"); if (s) { size.value = s; applySize(s); } } catch {}
-size.addEventListener("input", () => {
-  applySize(size.value);
-  try { localStorage.setItem("thumbSize", size.value); } catch {}
-});
-
-if (matchMedia("(hover: hover)").matches && !calm) {
-  const hero = document.querySelector("header"), stack = $("stack");
-  const aim = (x, y) => { stack.style.setProperty("--mx", x); stack.style.setProperty("--my", y); };
-  hero.addEventListener("pointermove", e => {
-    const r = hero.getBoundingClientRect();
-    aim(((e.clientX - r.left) / r.width - .5).toFixed(3), ((e.clientY - r.top) / r.height - .5).toFixed(3));
-  });
-  hero.addEventListener("pointerleave", () => aim(0, 0));
-}
-
-if (matchMedia("(hover: none)").matches) {
-  ["Tap the copy icon on an image to copy its link", "Tap an image to view it full screen", "Search by name from the bar below"]
-    .forEach((t, i) => { document.querySelectorAll(".how li")[i].lastChild.textContent = t; });
-}
-
-gallery.innerHTML = [240, 320, 200, 280, 340, 220, 300, 260]
-  .map(h => `<figure class="sk" style="height:${h}px" aria-hidden="true"></figure>`).join("");
 
 loadImages();
 </script>
