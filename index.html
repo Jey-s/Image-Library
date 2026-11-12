@@ -35,7 +35,7 @@ button{font:inherit}
 nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(5,5,6,.7);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
 .nav-inner{max-width:1600px;margin:0 auto;padding:16px 40px}
 .logo{font:600 20px var(--serif);letter-spacing:2px;color:var(--gold);text-decoration:none;text-transform:uppercase;display:flex;align-items:center;gap:12px;width:max-content}
-.logo svg{width:24px;height:24px;fill:none;stroke:var(--gold);stroke-width:1.5}
+.logo svg{width:28px;height:24px;filter:drop-shadow(0 0 8px var(--gold-glow))}
 
 .hero{position:relative;z-index:95;height:55vh;min-height:400px;display:flex;justify-content:center;align-items:center;text-align:center;background:linear-gradient(transparent,rgba(5,5,6,.9))}
 .hero::before,.utility::after{content:"";position:absolute;bottom:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold) 50%,transparent)}
@@ -128,7 +128,7 @@ dialog[open]{animation:fade .5s var(--ease)}
 <div class="app">
   <nav><div class="nav-inner">
     <a href="#" class="logo">
-      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      <svg viewBox="2 5 28 23" aria-hidden="true"><g stroke="#050506" stroke-width=".5" stroke-linejoin="round"><path d="M9 7h14l-3 6H12z" fill="#F3E5AB"/><path d="M9 7l3 6H4z" fill="#D4AF37"/><path d="M23 7l5 6h-8z" fill="#B8962E"/><path d="M4 13h8l4 13z" fill="#8A6D1C"/><path d="M12 13h8l-4 13z" fill="#E6C65A"/><path d="M20 13h8L16 26z" fill="#A07F22"/></g></svg>
       The Archive
     </a>
   </div></nav>
