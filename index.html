@@ -1,0 +1,203 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Image Library</title>
+
+<style>
+  body {
+    background: #101116;
+    color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 35px;
+  }
+
+  h1 { margin-bottom: 8px; }
+
+  #status {
+    color: #aaa;
+    margin-bottom: 25px;
+  }
+
+  #search {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px;
+    border-radius: 9px;
+    border: 1px solid #383944;
+    background: #1b1c24;
+    color: white;
+    margin-bottom: 25px;
+  }
+
+  #gallery {
+    display: grid;
+    grid-template-columns:
+      repeat(auto-fill, minmax(220px, 1fr));
+    gap: 18px;
+  }
+
+  .item {
+    background: #1b1c24;
+    border: 1px solid #30313c;
+    border-radius: 12px;
+    padding: 12px;
+    min-width: 0;
+  }
+
+  .item img {
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+    background: #090a0e;
+    border-radius: 7px;
+  }
+
+  .filename {
+    margin: 12px 0;
+    overflow-wrap: anywhere;
+    font-size: 14px;
+  }
+
+  button {
+    background: #343746;
+    color: white;
+    border: 0;
+    padding: 9px 12px;
+    border-radius: 7px;
+    cursor: pointer;
+    margin-right: 5px;
+  }
+
+  button:hover { background: #50546a; }
+</style>
+</head>
+
+<body>
+
+<h1>My Image Library</h1>
+<p id="status">Loading your images...</p>
+
+<input
+  id="search"
+  placeholder="Search images and GIFs..."
+>
+
+<div id="gallery"></div>
+
+<script>
+
+// CHANGE THESE THREE VALUES
+const USERNAME = "jordanschaatsbergen-svg";
+const REPOSITORY = "Image-Library";
+const BRANCH = "main";
+
+// GitHub Pages address
+const BASE_URL =
+  `https://${USERNAME}.github.io/${REPOSITORY}/`;
+
+// Supported image formats
+const EXTENSIONS =
+  /\.(jpg|jpeg|png|gif|webp|avif|svg|bmp)$/i;
+
+const gallery = document.getElementById("gallery");
+const status = document.getElementById("status");
+const search = document.getElementById("search");
+
+let items = [];
+
+async function loadImages() {
+  try {
+    const api =
+      `https://api.github.com/repos/${USERNAME}/${REPOSITORY}/git/trees/${encodeURIComponent(BRANCH)}?recursive=1`;
+
+    const response = await fetch(api);
+
+    if (!response.ok) {
+      throw new Error("Could not access repository.");
+    }
+
+    const data = await response.json();
+
+    if (data.truncated) {
+      throw new Error("Repository is too large to scan completely.");
+    }
+
+    items = data.tree.filter(file =>
+      file.type === "blob" &&
+      EXTENSIONS.test(file.path)
+    );
+
+    renderGallery();
+
+    status.textContent =
+      `Found ${items.length} images and GIFs.`;
+
+  } catch (error) {
+    status.textContent = error.message;
+  }
+}
+
+function renderGallery() {
+  const query = search.value.toLowerCase();
+
+  gallery.innerHTML = "";
+
+  const filtered = items.filter(file =>
+    file.path.toLowerCase().includes(query)
+  );
+
+  filtered.forEach(file => {
+    const path = file.path
+      .split("/")
+      .map(encodeURIComponent)
+      .join("/");
+
+    const url = BASE_URL + path;
+
+    const card = document.createElement("div");
+    card.className = "item";
+
+    const img = document.createElement("img");
+    img.src = url;
+    img.alt = file.path;
+    img.loading = "lazy";
+
+    const name = document.createElement("div");
+    name.className = "filename";
+    name.textContent = file.path;
+
+    const copy = document.createElement("button");
+    copy.textContent = "Copy link";
+
+    copy.onclick = async () => {
+      try {
+        await navigator.clipboard.writeText(url);
+        copy.textContent = "Copied!";
+        setTimeout(() => {
+          copy.textContent = "Copy link";
+        }, 1500);
+      } catch {
+        window.prompt("Copy this URL:", url);
+      }
+    };
+
+    const open = document.createElement("button");
+    open.textContent = "Open image";
+    open.onclick = () => window.open(url, "_blank");
+
+    card.append(img, name, copy, open);
+    gallery.appendChild(card);
+  });
+}
+
+search.addEventListener("input", renderGallery);
+
+loadImages();
+
+</script>
+</body>
+</html>
