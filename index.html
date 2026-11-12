@@ -1,79 +1,517 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>The Archive | Curated Collection</title>
-    
-    <!-- Premium Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
-    
-    <!-- Link to external CSS -->
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050506">
+<title>The Archive | Curated Collection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --obsidian-base: #050506;
+    --obsidian-surface: rgba(18, 18, 24, 0.65);
+    --gold-main: #D4AF37;
+    --gold-light: #F3E5AB;
+    --gold-muted: rgba(212, 175, 55, 0.4);
+    --gold-glow: rgba(212, 175, 55, 0.2);
+    --text-primary: #F7F7F7;
+    --text-secondary: #A0A0A5;
+    --border-dim: rgba(255, 255, 255, 0.1);
+    --font-serif: 'Playfair Display', serif;
+    --font-sans: 'Montserrat', sans-serif;
+    --ease-lux: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; background: var(--obsidian-base); color: var(--text-primary); scrollbar-gutter: stable; }
+  body { margin: 0; font-family: var(--font-sans); font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--gold-main); color: var(--obsidian-base); }
+
+  /* Canvas Obsidian Texture Background */
+  #obsidian-canvas {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: 0; pointer-events: none;
+  }
+  .vignette-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: 1; pointer-events: none;
+    background: radial-gradient(circle at center, transparent 15%, rgba(5,5,6,0.92) 100%);
+  }
+  .app-wrapper { position: relative; z-index: 10; }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.4); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--gold-main); }
+
+  /* Navigation */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    background: rgba(5, 5, 6, 0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-dim);
+  }
+  .nav-inner { max-width: 1600px; margin: 0 auto; padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; }
+  .nav-logo {
+    font-family: var(--font-serif); font-size: 20px; font-weight: 600; letter-spacing: 2px;
+    color: var(--gold-main); text-decoration: none; text-transform: uppercase;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .nav-logo svg { width: 24px; height: 24px; fill: none; stroke: var(--gold-main); stroke-width: 1.5; }
+
+  /* Hero Banner */
+  .hero {
+    height: 55vh; min-height: 400px; display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; background: linear-gradient(to bottom, transparent, rgba(5,5,6,0.9)); border-bottom: 1px solid var(--border-dim);
+  }
+  .hero-content { padding: 0 20px; animation: fadeUp 1.2s var(--ease-lux) forwards; }
+  .hero-subtitle {
+    font-family: var(--font-sans); font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold-main); margin-bottom: 24px; display: block;
+  }
+  .hero-title {
+    font-family: var(--font-serif); font-size: clamp(40px, 6vw, 72px); font-weight: 500;
+    margin: 0; line-height: 1.1; color: var(--text-primary); text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+  }
+  .hero-title i { color: var(--gold-light); font-style: italic; }
+  .hero-stats {
+    display: flex; gap: 40px; justify-content: center; margin-top: 40px;
+    border-top: 1px solid var(--gold-muted); padding-top: 30px; width: max-content; margin-inline: auto;
+  }
+  .stat { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .stat-num { font-family: var(--font-serif); font-size: 24px; color: var(--gold-main); }
+  .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-secondary); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Utility Bar */
+  .utility-bar {
+    max-width: 1600px; margin: 0 auto; padding: 40px 40px 20px;
+    display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; align-items: center;
+    position: sticky; top: 65px; z-index: 90; background: rgba(5,5,6,0.8); backdrop-filter: blur(12px);
+  }
+  .search-wrapper { position: relative; width: 100%; max-width: 400px; }
+  .search-wrapper svg {
+    position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+    width: 18px; height: 18px; stroke: var(--text-secondary); fill: none; transition: stroke 0.4s;
+  }
+  .search-wrapper:focus-within svg { stroke: var(--gold-main); }
+  #search {
+    width: 100%; background: rgba(20, 20, 26, 0.8); border: 1px solid var(--border-dim);
+    color: var(--text-primary); font-family: var(--font-sans); font-size: 13px;
+    padding: 12px 16px 12px 44px; border-radius: 4px; transition: all 0.4s var(--ease-lux);
+  }
+  #search:focus { outline: none; border-color: var(--gold-main); box-shadow: 0 0 15px var(--gold-glow); background: rgba(25,25,32,0.95); }
+  #search::placeholder { color: var(--text-secondary); }
+
+  .filter-tabs { display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
+  .filter-tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    background: rgba(20, 20, 26, 0.7); border: 1px solid var(--border-dim); color: var(--text-secondary);
+    padding: 8px 24px; border-radius: 40px; font-family: var(--font-sans); font-size: 12px;
+    letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.4s var(--ease-lux); white-space: nowrap;
+  }
+  .tab:hover { border-color: var(--gold-muted); color: var(--text-primary); }
+  .tab.active { background: var(--gold-main); border-color: var(--gold-main); color: var(--obsidian-base); font-weight: 600; }
+
+  /* Gallery Grid */
+  .gallery-container { max-width: 1600px; margin: 0 auto; padding: 20px 40px 100px; }
+  #gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 32px; }
+
+  .card {
+    background: var(--obsidian-surface); border: 1px solid var(--border-dim);
+    border-radius: 6px; overflow: hidden; display: flex; flex-direction: column;
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    transition: all 0.5s var(--ease-lux);
+  }
+  .card:hover {
+    border-color: var(--gold-muted); transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 20px var(--gold-glow);
+    background: rgba(30, 30, 38, 0.9);
+  }
+  .card-img-wrap { width: 100%; aspect-ratio: 4/3; overflow: hidden; position: relative; cursor: zoom-in; }
+  .card-img-wrap img {
+    width: 100%; height: 100%; object-fit: cover; opacity: 0; filter: grayscale(15%);
+    transition: opacity 0.8s ease, transform 1s var(--ease-lux), filter 0.5s;
+  }
+  .card-img-wrap img.ready { opacity: 1; }
+  .card:hover .card-img-wrap img { transform: scale(1.05); filter: grayscale(0%); }
+
+  .card-info { padding: 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .card-folder {
+    font-family: var(--font-serif); font-size: 11px; font-style: italic; color: var(--gold-main); letter-spacing: 1px;
+  }
+  .card-title {
+    margin: 0; font-size: 14px; font-weight: 400; color: var(--text-primary);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .card-actions { display: flex; gap: 12px; margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border-dim); }
+  .btn-action {
+    background: none; border: none; padding: 0; color: var(--text-secondary); cursor: pointer;
+    font-size: 12px; font-family: var(--font-sans); letter-spacing: 1px; text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 6px; transition: color 0.3s;
+  }
+  .btn-action svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+  .btn-action:hover { color: var(--gold-main); }
+  .empty-state {
+    grid-column: 1 / -1; text-align: center; padding: 100px 20px;
+    font-family: var(--font-serif); font-size: 24px; color: var(--text-secondary); font-style: italic;
+  }
+
+  /* Lightbox */
+  dialog {
+    border: 0; padding: 0; background: rgba(5, 5, 6, 0.95); backdrop-filter: blur(25px);
+    width: 100vw; max-width: 100vw; height: 100vh; max-height: 100vh; color: var(--text-primary);
+  }
+  dialog[open] { animation: fadeIn 0.5s var(--ease-lux) forwards; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .lb-wrapper { height: 100%; display: flex; flex-direction: column; padding: 20px 40px; }
+  .lb-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; }
+  .lb-meta-title { font-family: var(--font-serif); font-size: 20px; color: var(--gold-main); margin: 0; }
+  .lb-meta-count { font-size: 12px; color: var(--text-secondary); letter-spacing: 2px; }
+  .lb-close {
+    background: transparent; border: 1px solid var(--border-dim); color: var(--text-primary);
+    width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; cursor: pointer; transition: all 0.3s;
+  }
+  .lb-close:hover { border-color: var(--gold-main); color: var(--gold-main); }
+  .lb-close svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 1.5; }
+  .lb-stage { flex: 1; position: relative; display: flex; justify-content: center; align-items: center; min-height: 0; }
+  .lb-stage img { max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: 0 20px 60px rgba(0,0,0,0.9); }
+  .lb-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(20, 20, 26, 0.8); border: 1px solid var(--border-dim); color: var(--gold-main);
+    width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+    backdrop-filter: blur(8px); transition: all 0.3s;
+  }
+  .lb-nav:hover { background: var(--gold-main); color: var(--obsidian-base); }
+  .lb-nav.prev { left: 0; } .lb-nav.next { right: 0; }
+  .lb-nav svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;}
+
+  /* Toast */
+  #toast {
+    position: fixed; bottom: 40px; left: 50%; transform: translate(-50%, 20px);
+    background: var(--gold-main); color: var(--obsidian-base); padding: 12px 32px;
+    border-radius: 4px; font-family: var(--font-sans); font-size: 12px; font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase; box-shadow: 0 10px 30px var(--gold-glow);
+    opacity: 0; pointer-events: none; transition: all 0.5s var(--ease-lux); z-index: 1000;
+  }
+  #toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  @media (max-width: 768px) {
+    .hero-title { font-size: 32px; }
+    .hero-stats { gap: 20px; }
+    .nav-inner, .utility-bar, .gallery-container { padding-inline: 20px; }
+    #gallery { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+    .lb-wrapper { padding: 20px; }
+    .lb-nav { width: 40px; height: 40px; }
+  }
+</style>
 </head>
+
 <body>
-    <!-- Procedural Obsidian Background -->
-    <canvas id="obsidian-canvas"></canvas>
-    <div class="vignette-overlay"></div>
 
-    <div class="app-wrapper">
-        <nav>
-            <div class="nav-inner">
-                <a href="#" class="nav-logo">
-                    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                    The Archive
-                </a>
-            </div>
-        </nav>
+<canvas id="obsidian-canvas"></canvas>
+<div class="vignette-overlay"></div>
 
-        <header class="hero">
-            <div class="hero-content">
-                <span class="hero-subtitle">Bespoke Visual Asset Collection</span>
-                <h1 class="hero-title">Curated <i>Elegance</i></h1>
-                <div class="hero-stats">
-                    <div class="stat"><span class="stat-num" id="stat-total">0</span><span class="stat-label">Assets</span></div>
-                    <div class="stat"><span class="stat-num" id="stat-folders">0</span><span class="stat-label">Collections</span></div>
-                </div>
-            </div>
-        </header>
-
-        <div class="utility-bar">
-            <div class="filter-tabs" id="filter-tabs"></div>
-            <div class="search-wrapper">
-                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <input id="search" type="text" placeholder="Discover assets..." autocomplete="off">
-            </div>
-        </div>
-
-        <main class="gallery-container">
-            <div id="gallery"></div>
-        </main>
+<div class="app-wrapper">
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        The Archive
+      </a>
     </div>
+  </nav>
 
-    <dialog id="lightbox">
-        <div class="lb-wrapper">
-            <div class="lb-header">
-                <div>
-                    <h3 class="lb-meta-title" id="lb-title">Filename.jpg</h3>
-                    <span class="lb-meta-count" id="lb-count">01 / 10</span>
-                </div>
-                <button class="lb-close" id="lb-close" aria-label="Close">
-                    <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                </button>
-            </div>
-            <div class="lb-stage">
-                <button class="lb-nav prev" id="prev"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
-                <img id="lb-img" alt="">
-                <button class="lb-nav next" id="next"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
-            </div>
-        </div>
-    </dialog>
+  <header class="hero">
+    <div class="hero-content">
+      <span class="hero-subtitle">Bespoke Visual Asset Collection</span>
+      <h1 class="hero-title">Curated <i>Elegance</i></h1>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num" id="stat-total">0</span><span class="stat-label">Assets</span></div>
+        <div class="stat"><span class="stat-num" id="stat-folders">0</span><span class="stat-label">Collections</span></div>
+      </div>
+    </div>
+  </header>
 
-    <div id="toast">Copied to clipboard</div>
+  <div class="utility-bar">
+    <div class="filter-tabs" id="filter-tabs"></div>
+    <div class="search-wrapper">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="search" type="text" placeholder="Discover assets..." autocomplete="off">
+    </div>
+  </div>
 
-    <!-- Link to external JavaScript -->
-    <script src="app.js"></script>
+  <main class="gallery-container">
+    <div id="gallery"></div>
+  </main>
+</div>
+
+<dialog id="lightbox">
+  <div class="lb-wrapper">
+    <div class="lb-header">
+      <div>
+        <h3 class="lb-meta-title" id="lb-title">Filename.jpg</h3>
+        <span class="lb-meta-count" id="lb-count">01 / 10</span>
+      </div>
+      <button class="lb-close" id="lb-close" aria-label="Close">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="lb-stage">
+      <button class="lb-nav prev" id="prev"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <img id="lb-img" alt="">
+      <button class="lb-nav next" id="next"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+    </div>
+  </div>
+</dialog>
+
+<div id="toast">Copied to clipboard</div>
+
+<script>
+/* Procedural Obsidian Crystal Background Canvas */
+function generateObsidianTexture() {
+    const canvas = document.getElementById('obsidian-canvas');
+    const ctx = canvas.getContext('2d');
+    
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        drawTexture();
+    }
+
+    function drawTexture() {
+        const w = canvas.width;
+        const h = canvas.height;
+        
+        ctx.fillStyle = '#060608';
+        ctx.fillRect(0, 0, w, h);
+
+        // High-contrast crystal shards with visible faceted depth and gold glints
+        const shards = [
+            { pts: [[0,0], [w*0.7,0], [w*0.3, h*0.6]], col: ['#1d1d28', '#08080c'] },
+            { pts: [[w,0], [w, h*0.6], [w*0.4, h*0.3]], col: ['#252535', '#0a0a0e'] },
+            { pts: [[0,h], [w*0.4, h], [w*0.6, h*0.4], [0, h*0.7]], col: ['#181822', '#050508'] },
+            { pts: [[w,h], [w*0.5, h], [w*0.8, h*0.2]], col: ['#222230', '#07070a'] },
+            { pts: [[w*0.2, h*0.2], [w*0.8, h*0.1], [w*0.5, h*0.9]], col: ['#161620', '#09090d'] }
+        ];
+
+        shards.forEach(s => {
+            ctx.beginPath();
+            ctx.moveTo(s.pts[0][0], s.pts[0][1]);
+            for(let i = 1; i < s.pts.length; i++) ctx.lineTo(s.pts[i][0], s.pts[i][1]);
+            ctx.closePath();
+
+            let grad = ctx.createLinearGradient(s.pts[0][0], s.pts[0][1], s.pts[1][0], s.pts[1][1]);
+            grad.addColorStop(0, s.col[0]);
+            grad.addColorStop(1, s.col[1]);
+            ctx.fillStyle = grad;
+            ctx.fill();
+
+            ctx.lineWidth = 1.2;
+            ctx.strokeStyle = 'rgba(212, 175, 55, 0.12)';
+            ctx.stroke();
+        });
+
+        // Add subtle film grain overlay
+        const imgData = ctx.getImageData(0, 0, w, h);
+        const data = imgData.data;
+        for (let i = 0; i < data.length; i += 4) {
+            let noise = (Math.random() - 0.5) * 12;
+            data[i] += noise;
+            data[i+1] += noise;
+            data[i+2] += noise;
+        }
+        ctx.putImageData(imgData, 0, 0);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+}
+generateObsidianTexture();
+
+/* Repository Logic & Gallery */
+const USERNAME = "Jey-s";
+const REPOSITORY = "Image-Library";
+const BRANCH = "Images";
+const BASE_URL = `https://${USERNAME}.github.io/${REPOSITORY}/`;
+const EXTENSIONS = /\.(jpg|jpeg|png|gif|webp|avif|svg|bmp)$/i;
+
+const ICON_COPY = '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+const ICON_LINK = '<svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+
+const $ = id => document.getElementById(id);
+const gallery = $("gallery"), search = $("search"), tabsEl = $("filter-tabs"),
+      lightbox = $("lightbox"), lbImg = $("lb-img"), toast = $("toast");
+
+let items = [], view = [], activeFolder = "All", current = 0, toastTimer;
+
+const urlFor = p => BASE_URL + p.split("/").map(encodeURIComponent).join("/");
+const folderOf = p => p.includes("/") ? p.split("/")[0] : "Archive";
+
+function say(msg) {
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("show"), 2500);
+}
+
+async function copyURL(path) {
+    try {
+        await navigator.clipboard.writeText(urlFor(path));
+        say("Asset Link Copied");
+    } catch {
+        window.prompt("Manual Copy Required:", urlFor(path));
+    }
+}
+
+async function loadImages() {
+    try {
+        const api = `https://api.github.com/repos/${USERNAME}/${REPOSITORY}/git/trees/${encodeURIComponent(BRANCH)}?recursive=1`;
+        const response = await fetch(api);
+        if (!response.ok) throw new Error("Unable to authenticate with the archive.");
+        const data = await response.json();
+        
+        items = data.tree.filter(f => f.type === "blob" && EXTENSIONS.test(f.path));
+        
+        renderTabs();
+        buildGallery();
+        renderGallery();
+    } catch (error) {
+        gallery.innerHTML = `<div class="empty-state">${error.message}</div>`;
+    }
+}
+
+function renderTabs() {
+    const counts = {};
+    items.forEach(f => { const k = folderOf(f.path); counts[k] = (counts[k] || 0) + 1; });
+    
+    $("stat-total").textContent = items.length;
+    $("stat-folders").textContent = Object.keys(counts).length;
+
+    tabsEl.innerHTML = "";
+    ["All", ...Object.keys(counts).sort()].forEach(name => {
+        const btn = document.createElement("button");
+        btn.className = "tab" + (name === activeFolder ? " active" : "");
+        btn.textContent = name;
+        btn.onclick = () => {
+            activeFolder = name;
+            Array.from(tabsEl.children).forEach(c => c.classList.remove("active"));
+            btn.classList.add("active");
+            renderGallery();
+        };
+        tabsEl.appendChild(btn);
+    });
+}
+
+function buildGallery() {
+    gallery.innerHTML = "";
+    items.forEach(file => {
+        const parts = file.path.split("/");
+        const base = parts.pop();
+        const folder = parts.length ? parts.join("/") : "Archive";
+
+        const card = file.el = document.createElement("article");
+        card.className = "card";
+
+        const imgWrap = document.createElement("div");
+        imgWrap.className = "card-img-wrap";
+        imgWrap.onclick = () => openLightbox(view.indexOf(file));
+        
+        const img = document.createElement("img");
+        img.loading = "lazy";
+        img.onload = () => img.classList.add("ready");
+        img.src = urlFor(file.path);
+        imgWrap.appendChild(img);
+
+        const info = document.createElement("div");
+        info.className = "card-info";
+        info.innerHTML = `
+            <span class="card-folder">${folder}</span>
+            <h3 class="card-title" title="${base}">${base}</h3>
+        `;
+
+        const actions = document.createElement("div");
+        actions.className = "card-actions";
+        
+        const copyBtn = document.createElement("button");
+        copyBtn.className = "btn-action";
+        copyBtn.innerHTML = `${ICON_COPY} Copy`;
+        copyBtn.onclick = (e) => { e.stopPropagation(); copyURL(file.path); };
+
+        const openBtn = document.createElement("a");
+        openBtn.className = "btn-action";
+        openBtn.innerHTML = `${ICON_LINK} View`;
+        openBtn.href = urlFor(file.path);
+        openBtn.target = "_blank";
+        openBtn.style.textDecoration = "none";
+
+        actions.append(copyBtn, openBtn);
+        info.appendChild(actions);
+
+        card.append(imgWrap, info);
+        gallery.appendChild(card);
+    });
+}
+
+function renderGallery() {
+    const q = search.value.trim().toLowerCase();
+    view = items.filter(f => 
+        (activeFolder === "All" || folderOf(f.path) === activeFolder) &&
+        f.path.toLowerCase().includes(q)
+    );
+    
+    const shown = new Set(view);
+    items.forEach(f => { f.el.style.display = shown.has(f) ? "flex" : "none"; });
+
+    if (view.length === 0) {
+        let empty = gallery.querySelector(".empty-state");
+        if (!empty) {
+            empty = document.createElement("div");
+            empty.className = "empty-state";
+            gallery.appendChild(empty);
+        }
+        empty.textContent = "No assets match your criteria.";
+        empty.style.display = "block";
+    } else {
+        let empty = gallery.querySelector(".empty-state");
+        if (empty) empty.style.display = "none";
+    }
+}
+
+function showAt(i) {
+    if (!view.length) return;
+    current = (i + view.length) % view.length;
+    const f = view[current];
+    lbImg.src = urlFor(f.path);
+    $("lb-title").textContent = f.path.split("/").pop();
+    
+    const cNum = String(current + 1).padStart(2, '0');
+    const tNum = String(view.length).padStart(2, '0');
+    $("lb-count").textContent = `${cNum} / ${tNum}`;
+}
+
+function openLightbox(i) { showAt(i); lightbox.showModal(); }
+
+$("prev").onclick = () => showAt(current - 1);
+$("next").onclick = () => showAt(current + 1);
+$("lb-close").onclick = () => lightbox.close();
+lightbox.addEventListener("click", e => { 
+    if (e.target === lightbox || e.target.classList.contains("lb-stage")) lightbox.close(); 
+});
+lightbox.addEventListener("close", () => { lbImg.removeAttribute("src"); });
+
+document.addEventListener("keydown", e => {
+    if (lightbox.open) {
+        if (e.key === "ArrowLeft") showAt(current - 1);
+        if (e.key === "ArrowRight") showAt(current + 1);
+    }
+});
+
+search.addEventListener("input", renderGallery);
+loadImages();
+</script>
 </body>
 </html>
