@@ -3,402 +3,306 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>My Image Board</title>
+<meta name="theme-color" content="#0b0b0d">
+<title>The Archive | Curated Collection</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
 
 <style>
   :root {
-    --bg-page: #f3f4f6;
-    --bg-content: #ffffff;
-    --border-color: #d1d5db;
-    --text-main: #374151;
-    --text-muted: #6b7280;
-    --link-color: #0366d6;
-    --link-hover: #0056b3;
-    --accent: #2e8b57; /* Classic image-board green */
-    --accent-hover: #246b43;
-    --header-bg: #24292e;
-    --sidebar-width: 260px;
+    --obsidian-base: #070708;
+    --obsidian-surface: #111114;
+    --obsidian-raised: #1a1a1f;
+    --gold-main: #D4AF37;
+    --gold-light: #F3E5AB;
+    --gold-muted: rgba(212, 175, 55, 0.4);
+    --gold-glow: rgba(212, 175, 55, 0.15);
+    --text-primary: #F7F7F7;
+    --text-secondary: #A0A0A5;
+    --border-dim: rgba(255, 255, 255, 0.08);
+    --font-serif: 'Playfair Display', serif;
+    --font-sans: 'Montserrat', sans-serif;
+    --ease-lux: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; background: var(--obsidian-base); color: var(--text-primary); scrollbar-gutter: stable; }
+  body { margin: 0; font-family: var(--font-sans); font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--gold-main); color: var(--obsidian-base); }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--obsidian-base); }
+  ::-webkit-scrollbar-thumb { background: var(--obsidian-raised); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--gold-muted); }
+
+  /* ---------- Navigation ---------- */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    background: rgba(7, 7, 8, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-dim);
+    transition: all 0.4s var(--ease-lux);
+  }
+  .nav-inner {
+    max-width: 1600px; margin: 0 auto; padding: 16px 40px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .nav-logo {
+    font-family: var(--font-serif); font-size: 20px; font-weight: 600; letter-spacing: 2px;
+    color: var(--gold-main); text-decoration: none; text-transform: uppercase;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .nav-logo svg { width: 24px; height: 24px; fill: none; stroke: var(--gold-main); stroke-width: 1.5; }
+
+  /* ---------- Hero Banner ---------- */
+  .hero {
+    position: relative; height: 55vh; min-height: 400px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; overflow: hidden;
+    background: radial-gradient(circle at center, var(--obsidian-surface) 0%, var(--obsidian-base) 100%);
+    border-bottom: 1px solid var(--border-dim);
+  }
+  /* Subtle gold mesh/glow overlay */
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 0%, var(--gold-glow) 0%, transparent 60%);
+    opacity: 0.6; pointer-events: none;
+  }
   
-  body {
-    margin: 0; 
-    background-color: var(--bg-page);
-    color: var(--text-main);
-    font-family: 'Open Sans', Arial, sans-serif;
-    font-size: 13px;
-    line-height: 1.5;
+  .hero-content { position: relative; z-index: 2; padding: 0 20px; animation: fadeUp 1.2s var(--ease-lux) forwards; }
+  .hero-subtitle {
+    font-family: var(--font-sans); font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold-main); margin-bottom: 24px; display: block;
+  }
+  .hero-title {
+    font-family: var(--font-serif); font-size: clamp(40px, 6vw, 72px); font-weight: 500;
+    margin: 0; line-height: 1.1; color: var(--text-primary);
+  }
+  .hero-title i { color: var(--gold-light); font-style: italic; }
+  
+  .hero-stats {
+    display: flex; gap: 40px; justify-content: center; margin-top: 40px;
+    border-top: 1px solid var(--gold-muted); padding-top: 30px; width: max-content; margin-inline: auto;
+  }
+  .stat { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .stat-num { font-family: var(--font-serif); font-size: 24px; color: var(--gold-main); }
+  .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-secondary); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ---------- Utility Bar (Search & Filter) ---------- */
+  .utility-bar {
+    max-width: 1600px; margin: 0 auto; padding: 40px 40px 20px;
+    display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; align-items: center;
+    position: sticky; top: 65px; z-index: 90; background: var(--obsidian-base);
   }
 
-  /* ---------- Header ---------- */
-  header {
-    background-color: var(--header-bg);
-    color: #fff;
-    padding: 0 20px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-    position: sticky;
-    top: 0;
-    z-index: 50;
+  .search-wrapper { position: relative; width: 100%; max-width: 400px; }
+  .search-wrapper svg {
+    position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+    width: 18px; height: 18px; stroke: var(--text-secondary); fill: none; transition: stroke 0.4s;
   }
-
-  .logo {
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    color: #fff;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .logo span { color: var(--accent); }
-
-  /* ---------- Main Layout ---------- */
-  .container {
-    max-width: 1600px;
-    margin: 20px auto;
-    padding: 0 20px;
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
-  }
-
-  /* ---------- Sidebar ---------- */
-  .sidebar {
-    width: var(--sidebar-width);
-    flex-shrink: 0;
-    background: var(--bg-content);
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    padding: 15px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    position: sticky;
-    top: 70px;
-  }
-
-  .box-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--text-main);
-    margin: 0 0 12px 0;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #e5e7eb;
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .search-box {
-    margin-bottom: 25px;
-  }
-
+  .search-wrapper:focus-within svg { stroke: var(--gold-main); }
   #search {
-    width: 100%;
-    padding: 8px 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 3px;
-    font-size: 13px;
-    font-family: inherit;
+    width: 100%; background: var(--obsidian-surface); border: 1px solid var(--border-dim);
+    color: var(--text-primary); font-family: var(--font-sans); font-size: 13px;
+    padding: 12px 16px 12px 44px; border-radius: 4px; transition: all 0.4s var(--ease-lux);
   }
-  #search:focus { outline: none; border-color: var(--link-color); }
+  #search:focus { outline: none; border-color: var(--gold-main); box-shadow: 0 0 15px var(--gold-glow); }
+  #search::placeholder { color: var(--text-secondary); }
 
-  .tag-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 25px 0;
+  .filter-tabs {
+    display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px;
   }
-
-  .tag-list li {
-    margin-bottom: 6px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .tag-btn {
-    background: none;
-    border: none;
-    padding: 0;
-    color: var(--link-color);
-    cursor: pointer;
-    font-size: 13px;
-    font-family: inherit;
-    text-align: left;
-  }
-  .tag-btn:hover { text-decoration: underline; color: var(--link-hover); }
-  .tag-btn.active { font-weight: 700; color: var(--text-main); text-decoration: none; cursor: default; }
-
-  .tag-count {
-    color: var(--text-muted);
-    font-size: 11px;
-    background: #f3f4f6;
-    padding: 2px 6px;
-    border-radius: 10px;
-  }
-
-  .stats {
-    font-size: 12px;
-    color: var(--text-muted);
-  }
-
-  /* ---------- Gallery / Main Content ---------- */
-  .main-content {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .page-title {
-    margin: 0 0 15px 0;
-    font-size: 24px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-  }
-
-  .status-text {
-    font-size: 13px;
-    font-weight: 400;
-    color: var(--text-muted);
-  }
-
-  #gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 15px;
-  }
-
-  /* Image Board Card Style */
-  .thumb-card {
-    background: var(--bg-content);
-    border: 1px solid var(--border-color);
-    padding: 6px;
-    border-radius: 3px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    display: flex;
-    flex-direction: column;
-    transition: border-color 0.2s;
-  }
-  .thumb-card:hover { border-color: var(--link-color); }
-
-  .img-wrap {
-    width: 100%;
-    aspect-ratio: 1; /* Classic square thumbnails */
-    background: #e5e7eb;
-    display: block;
-    cursor: pointer;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .img-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: opacity 0.2s;
-  }
-  .img-wrap:hover img { opacity: 0.9; }
-
-  .meta {
-    padding-top: 6px;
-    font-size: 11px;
-    line-height: 1.4;
-    word-break: break-all;
-  }
-
-  .meta-title {
-    color: var(--text-main);
-    display: block;
+  .filter-tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    background: transparent; border: 1px solid var(--border-dim); color: var(--text-secondary);
+    padding: 8px 24px; border-radius: 40px; font-family: var(--font-sans); font-size: 12px;
+    letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.4s var(--ease-lux);
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  }
+  .tab:hover { border-color: var(--gold-muted); color: var(--text-primary); }
+  .tab.active { background: var(--gold-main); border-color: var(--gold-main); color: var(--obsidian-base); font-weight: 500; }
+
+  /* ---------- Gallery Grid ---------- */
+  .gallery-container { max-width: 1600px; margin: 0 auto; padding: 20px 40px 100px; }
+  #gallery {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 32px;
   }
 
-  .meta-tag {
-    color: var(--accent);
-    font-weight: 600;
-    display: inline-block;
+  .card {
+    background: var(--obsidian-surface); border: 1px solid var(--border-dim);
+    border-radius: 6px; overflow: hidden; display: flex; flex-direction: column;
+    transition: all 0.5s var(--ease-lux);
+  }
+  .card:hover {
+    border-color: var(--gold-muted); transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.4), 0 0 20px var(--gold-glow);
   }
 
-  .actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 6px;
+  .card-img-wrap {
+    width: 100%; aspect-ratio: 4/3; overflow: hidden; position: relative;
+    background: var(--obsidian-raised); cursor: zoom-in;
   }
-  .action-link {
-    color: var(--link-color);
-    cursor: pointer;
-    font-size: 11px;
-    text-decoration: none;
+  .card-img-wrap img {
+    width: 100%; height: 100%; object-fit: cover; opacity: 0; filter: grayscale(20%);
+    transition: opacity 0.8s ease, transform 1s var(--ease-lux), filter 0.5s;
   }
-  .action-link:hover { text-decoration: underline; }
+  .card-img-wrap img.ready { opacity: 1; }
+  .card:hover .card-img-wrap img { transform: scale(1.05); filter: grayscale(0%); }
 
-  .empty {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 50px;
-    background: var(--bg-content);
-    border: 1px solid var(--border-color);
-    color: var(--text-muted);
+  .card-info { padding: 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .card-folder {
+    font-family: var(--font-serif); font-size: 11px; font-style: italic; color: var(--gold-main);
+    letter-spacing: 1px;
+  }
+  .card-title {
+    margin: 0; font-size: 14px; font-weight: 400; color: var(--text-primary);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
 
-  /* ---------- Lightbox (Image Viewer) ---------- */
-  dialog {
-    border: none;
-    padding: 0;
-    background: rgba(0, 0, 0, 0.85);
-    width: 100vw; max-width: 100vw;
-    height: 100vh; max-height: 100vh;
-    color: #fff;
+  .card-actions {
+    display: flex; gap: 12px; margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border-dim);
   }
-  dialog::backdrop { background: rgba(0, 0, 0, 0.85); }
+  .btn-action {
+    background: none; border: none; padding: 0; color: var(--text-secondary); cursor: pointer;
+    font-size: 12px; font-family: var(--font-sans); letter-spacing: 1px; text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 6px; transition: color 0.3s;
+  }
+  .btn-action svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+  .btn-action:hover { color: var(--gold-main); }
   
-  .lb-layout {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+  .empty-state {
+    grid-column: 1 / -1; text-align: center; padding: 100px 20px;
+    font-family: var(--font-serif); font-size: 24px; color: var(--text-secondary); font-style: italic;
   }
 
-  .lb-header {
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(0,0,0,0.5);
+  /* ---------- Lightbox ---------- */
+  dialog {
+    border: 0; padding: 0; background: rgba(7, 7, 8, 0.95); backdrop-filter: blur(20px);
+    width: 100vw; max-width: 100vw; height: 100vh; max-height: 100vh; color: var(--text-primary);
   }
+  dialog[open] { animation: fadeIn 0.5s var(--ease-lux) forwards; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-  .lb-info { font-size: 14px; }
-  .lb-info span { color: #a1a1aa; margin-left: 10px; }
-
+  .lb-wrapper { height: 100%; display: flex; flex-direction: column; padding: 20px 40px; }
+  
+  .lb-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; }
+  .lb-meta-title { font-family: var(--font-serif); font-size: 20px; color: var(--gold-main); margin: 0; }
+  .lb-meta-count { font-size: 12px; color: var(--text-secondary); letter-spacing: 2px; }
+  
   .lb-close {
-    background: none; border: 1px solid #fff; color: #fff;
-    padding: 5px 15px; cursor: pointer; border-radius: 3px;
-    font-size: 12px;
+    background: transparent; border: 1px solid var(--border-dim); color: var(--text-primary);
+    width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+    transition: all 0.3s;
   }
-  .lb-close:hover { background: #fff; color: #000; }
+  .lb-close:hover { border-color: var(--gold-main); color: var(--gold-main); }
+  .lb-close svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 1.5; }
 
-  .lb-content {
-    flex: 1;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 0; /* allows child img to shrink */
-  }
-
-  .lb-content img {
-    max-width: 95%;
-    max-height: 95%;
-    object-fit: contain;
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
-    background: #fff; /* In case of transparent PNGs */
-  }
+  .lb-stage { flex: 1; position: relative; display: flex; justify-content: center; align-items: center; min-height: 0; }
+  .lb-stage img { max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
 
   .lb-nav {
-    position: absolute;
-    top: 0; bottom: 0;
-    width: 15%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgba(255,255,255,0);
-    font-size: 40px;
-    font-weight: bold;
-    transition: color 0.2s, background 0.2s;
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(17, 17, 20, 0.6); border: 1px solid var(--border-dim); color: var(--gold-main);
+    width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+    backdrop-filter: blur(8px); transition: all 0.3s;
   }
-  .lb-nav:hover { color: rgba(255,255,255,0.8); }
-  .lb-nav.prev { left: 0; background: linear-gradient(to right, rgba(0,0,0,0.4), transparent); }
-  .lb-nav.next { right: 0; background: linear-gradient(to left, rgba(0,0,0,0.4), transparent); }
+  .lb-nav:hover { background: var(--gold-main); color: var(--obsidian-base); }
+  .lb-nav.prev { left: 0; } .lb-nav.next { right: 0; }
+  .lb-nav svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;}
 
   /* ---------- Toast ---------- */
   #toast {
-    position: fixed; bottom: 20px; right: 20px;
-    background: var(--accent); color: #fff;
-    padding: 10px 20px; border-radius: 3px;
-    font-size: 13px; font-weight: 600;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.2s;
-    z-index: 100;
+    position: fixed; bottom: 40px; left: 50%; transform: translate(-50%, 20px);
+    background: var(--gold-main); color: var(--obsidian-base); padding: 12px 32px;
+    border-radius: 4px; font-family: var(--font-sans); font-size: 12px; font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase; box-shadow: 0 10px 30px var(--gold-glow);
+    opacity: 0; pointer-events: none; transition: all 0.5s var(--ease-lux); z-index: 1000;
   }
-  #toast.show { opacity: 1; }
+  #toast.show { opacity: 1; transform: translate(-50%, 0); }
 
   @media (max-width: 768px) {
-    .container { flex-direction: column; }
-    .sidebar { width: 100%; position: static; }
-    #gallery { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
-    .lb-nav { width: 25%; }
+    .hero-title { font-size: 32px; }
+    .hero-stats { gap: 20px; }
+    .nav-inner, .utility-bar, .gallery-container { padding-inline: 20px; }
+    #gallery { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+    .lb-wrapper { padding: 20px; }
+    .lb-nav { width: 40px; height: 40px; }
   }
 </style>
 </head>
 
 <body>
 
-<header>
-  <a href="#" class="logo">Zero<span>Library</span></a>
+<!-- Navigation -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      The Archive
+    </a>
+  </div>
+</nav>
+
+<!-- Hero Banner -->
+<header class="hero">
+  <div class="hero-content">
+    <span class="hero-subtitle">Bespoke Visual Asset Collection</span>
+    <h1 class="hero-title">Curated <i>Elegance</i></h1>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num" id="stat-total">0</span>
+        <span class="stat-label">Assets</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="stat-folders">0</span>
+        <span class="stat-label">Collections</span>
+      </div>
+    </div>
+  </div>
 </header>
 
-<div class="container">
-  <!-- Left Sidebar -->
-  <aside class="sidebar">
-    <div class="search-box">
-      <h3 class="box-title">Search</h3>
-      <input id="search" type="search" placeholder="Search filename..." autocomplete="off">
-    </div>
-
-    <div>
-      <h3 class="box-title">Tags (Folders)</h3>
-      <ul class="tag-list" id="tag-list">
-        <!-- Folders inject here -->
-      </ul>
-    </div>
-
-    <div class="stats" id="stats">
-      <!-- Stats inject here -->
-    </div>
-  </aside>
-
-  <!-- Main Grid -->
-  <main class="main-content">
-    <h1 class="page-title">
-      <span id="current-folder">All Images</span>
-      <span class="status-text" id="status">Loading library...</span>
-    </h1>
-    
-    <div id="gallery">
-      <!-- Images inject here -->
-    </div>
-  </main>
+<!-- Utility Bar -->
+<div class="utility-bar">
+  <div class="filter-tabs" id="filter-tabs">
+    <!-- Tabs injected via JS -->
+  </div>
+  
+  <div class="search-wrapper">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input id="search" type="text" placeholder="Discover assets..." autocomplete="off">
+  </div>
 </div>
+
+<!-- Gallery -->
+<main class="gallery-container">
+  <div id="gallery"></div>
+</main>
 
 <!-- Lightbox -->
 <dialog id="lightbox">
-  <div class="lb-layout">
+  <div class="lb-wrapper">
     <div class="lb-header">
-      <div class="lb-info">
-        <span id="lb-name" style="color:#fff; margin:0;">filename.jpg</span>
-        <span id="lb-count">1 of 10</span>
+      <div>
+        <h3 class="lb-meta-title" id="lb-title">Filename.jpg</h3>
+        <span class="lb-meta-count" id="lb-count">01 / 10</span>
       </div>
-      <button class="lb-close" id="lb-close">Close (ESC)</button>
+      <button class="lb-close" id="lb-close" aria-label="Close">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
-    <div class="lb-content">
-      <div class="lb-nav prev" id="prev">‹</div>
+    <div class="lb-stage">
+      <button class="lb-nav prev" id="prev"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
       <img id="lb-img" alt="">
-      <div class="lb-nav next" id="next">›</div>
+      <button class="lb-nav next" id="next"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
     </div>
   </div>
 </dialog>
 
-<div id="toast"></div>
+<!-- Toast -->
+<div id="toast">Copied to clipboard</div>
 
 <script>
 // CONFIGURATION
@@ -408,30 +312,32 @@ const BRANCH = "Images";
 const BASE_URL = `https://${USERNAME}.github.io/${REPOSITORY}/`;
 const EXTENSIONS = /\.(jpg|jpeg|png|gif|webp|avif|svg|bmp)$/i;
 
-// DOM Elements
+// ICONS
+const ICON_COPY = '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+const ICON_LINK = '<svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+
 const $ = id => document.getElementById(id);
-const gallery = $("gallery"), statusEl = $("status"), search = $("search"),
-      tagList = $("tag-list"), stats = $("stats"), currentFolder = $("current-folder"),
+const gallery = $("gallery"), search = $("search"), tabsEl = $("filter-tabs"),
       lightbox = $("lightbox"), lbImg = $("lb-img"), toast = $("toast");
 
-let items = [], view = [], activeFolder = "All", current = 0, toastTimer, emptyEl;
+let items = [], view = [], activeFolder = "All", current = 0, toastTimer;
 
 const urlFor = p => BASE_URL + p.split("/").map(encodeURIComponent).join("/");
-const folderOf = p => p.includes("/") ? p.split("/")[0] : "Root";
+const folderOf = p => p.includes("/") ? p.split("/")[0] : "Archive";
 
 function say(msg) {
   toast.textContent = msg;
   toast.classList.add("show");
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove("show"), 2000);
+  toastTimer = setTimeout(() => toast.classList.remove("show"), 2500);
 }
 
-async function copyLink(path) {
+async function copyURL(path) {
   try {
     await navigator.clipboard.writeText(urlFor(path));
-    say("URL copied to clipboard.");
+    say("Asset Link Copied");
   } catch {
-    window.prompt("Copy this URL:", urlFor(path));
+    window.prompt("Manual Copy Required:", urlFor(path));
   }
 }
 
@@ -439,106 +345,97 @@ async function loadImages() {
   try {
     const api = `https://api.github.com/repos/${USERNAME}/${REPOSITORY}/git/trees/${encodeURIComponent(BRANCH)}?recursive=1`;
     const response = await fetch(api);
-    if (!response.ok) throw new Error(`GitHub API Error (${response.status})`);
+    if (!response.ok) throw new Error("Unable to authenticate with the archive.");
     const data = await response.json();
     
     items = data.tree.filter(f => f.type === "blob" && EXTENSIONS.test(f.path));
     
-    renderSidebar();
+    renderTabs();
     buildGallery();
     renderGallery();
   } catch (error) {
-    gallery.innerHTML = "";
-    statusEl.textContent = error.message;
+    gallery.innerHTML = `<div class="empty-state">${error.message}</div>`;
   }
 }
 
-function renderSidebar() {
+function renderTabs() {
   const counts = {};
   items.forEach(f => { const k = folderOf(f.path); counts[k] = (counts[k] || 0) + 1; });
   
-  tagList.innerHTML = "";
-  ["All", ...Object.keys(counts).sort()].forEach(name => {
-    const li = document.createElement("li");
-    const btn = document.createElement("button");
-    btn.className = "tag-btn" + (name === activeFolder ? " active" : "");
-    btn.textContent = name;
-    btn.onclick = () => { 
-      activeFolder = name; 
-      search.value = ""; 
-      currentFolder.textContent = name === "All" ? "All Images" : name;
-      renderSidebar(); 
-      renderGallery(); 
-    };
-    
-    const count = document.createElement("span");
-    count.className = "tag-count";
-    count.textContent = name === "All" ? items.length : counts[name];
-    
-    li.append(btn, count);
-    tagList.appendChild(li);
-  });
+  // Update Hero Stats
+  $("stat-total").textContent = items.length;
+  $("stat-folders").textContent = Object.keys(counts).length;
 
-  stats.innerHTML = `Total files: ${items.length}<br>Total tags: ${Object.keys(counts).length}`;
+  tabsEl.innerHTML = "";
+  ["All", ...Object.keys(counts).sort()].forEach(name => {
+    const btn = document.createElement("button");
+    btn.className = "tab" + (name === activeFolder ? " active" : "");
+    btn.textContent = name;
+    btn.onclick = () => {
+      activeFolder = name;
+      Array.from(tabsEl.children).forEach(c => c.classList.remove("active"));
+      btn.classList.add("active");
+      renderGallery();
+    };
+    tabsEl.appendChild(btn);
+  });
 }
 
-// Build DOM elements once
 function buildGallery() {
   gallery.innerHTML = "";
   items.forEach(file => {
-    const parts = file.path.split("/"), base = parts.pop();
-    const folder = parts.length ? parts.join("/") : "Root";
+    const parts = file.path.split("/");
+    const base = parts.pop();
+    const folder = parts.length ? parts.join("/") : "Archive";
 
-    const card = file.el = document.createElement("div");
-    card.className = "thumb-card";
+    const card = file.el = document.createElement("article");
+    card.className = "card";
 
-    const imgWrap = document.createElement("a");
-    imgWrap.className = "img-wrap";
+    // Image Wrap
+    const imgWrap = document.createElement("div");
+    imgWrap.className = "card-img-wrap";
     imgWrap.onclick = () => openLightbox(view.indexOf(file));
     
     const img = document.createElement("img");
     img.loading = "lazy";
+    img.onload = () => img.classList.add("ready");
     img.src = urlFor(file.path);
     imgWrap.appendChild(img);
 
-    const meta = document.createElement("div");
-    meta.className = "meta";
-    meta.innerHTML = `
-      <span class="meta-tag">${folder}</span><br>
-      <span class="meta-title" title="${base}">${base}</span>
+    // Info Wrap
+    const info = document.createElement("div");
+    info.className = "card-info";
+    info.innerHTML = `
+      <span class="card-folder">${folder}</span>
+      <h3 class="card-title" title="${base}">${base}</h3>
     `;
 
+    // Actions
     const actions = document.createElement("div");
-    actions.className = "actions";
+    actions.className = "card-actions";
     
-    const copyBtn = document.createElement("span");
-    copyBtn.className = "action-link";
-    copyBtn.textContent = "[Copy Link]";
-    copyBtn.onclick = () => copyLink(file.path);
+    const copyBtn = document.createElement("button");
+    copyBtn.className = "btn-action";
+    copyBtn.innerHTML = `${ICON_COPY} Copy`;
+    copyBtn.onclick = (e) => { e.stopPropagation(); copyURL(file.path); };
 
     const openBtn = document.createElement("a");
-    openBtn.className = "action-link";
-    openBtn.textContent = "[Full]";
+    openBtn.className = "btn-action";
+    openBtn.innerHTML = `${ICON_LINK} View`;
     openBtn.href = urlFor(file.path);
     openBtn.target = "_blank";
+    openBtn.style.textDecoration = "none";
 
     actions.append(copyBtn, openBtn);
-    meta.appendChild(actions);
+    info.appendChild(actions);
 
-    card.append(imgWrap, meta);
+    card.append(imgWrap, info);
     gallery.appendChild(card);
   });
-
-  emptyEl = document.createElement("div");
-  emptyEl.className = "empty";
-  emptyEl.hidden = true;
-  gallery.appendChild(emptyEl);
 }
 
 function renderGallery() {
-  if (!emptyEl) return;
   const q = search.value.trim().toLowerCase();
-  
   view = items.filter(f => 
     (activeFolder === "All" || folderOf(f.path) === activeFolder) &&
     f.path.toLowerCase().includes(q)
@@ -547,36 +444,45 @@ function renderGallery() {
   const shown = new Set(view);
   items.forEach(f => { f.el.style.display = shown.has(f) ? "flex" : "none"; });
 
-  statusEl.textContent = `Showing ${view.length} results`;
-  
-  emptyEl.hidden = view.length > 0;
-  emptyEl.textContent = "No images found for this criteria.";
+  if (view.length === 0) {
+    let empty = gallery.querySelector(".empty-state");
+    if (!empty) {
+      empty = document.createElement("div");
+      empty.className = "empty-state";
+      gallery.appendChild(empty);
+    }
+    empty.textContent = "No assets match your criteria.";
+    empty.style.display = "block";
+  } else {
+    const empty = gallery.querySelector(".empty-state");
+    if (empty) empty.style.display = "none";
+  }
 }
 
-/* ---------- Lightbox ---------- */
+/* ---------- Lightbox Logic ---------- */
 function showAt(i) {
   if (!view.length) return;
   current = (i + view.length) % view.length;
   const f = view[current];
   lbImg.src = urlFor(f.path);
-  $("lb-name").textContent = f.path;
-  $("lb-count").textContent = `${current + 1} of ${view.length}`;
+  $("lb-title").textContent = f.path.split("/").pop();
+  
+  // Format count to 01 / 10
+  const cNum = String(current + 1).padStart(2, '0');
+  const tNum = String(view.length).padStart(2, '0');
+  $("lb-count").textContent = `${cNum} / ${tNum}`;
 }
 
-function openLightbox(i) { 
-  showAt(i); 
-  lightbox.showModal(); 
-}
+function openLightbox(i) { showAt(i); lightbox.showModal(); }
 
 $("prev").onclick = () => showAt(current - 1);
 $("next").onclick = () => showAt(current + 1);
 $("lb-close").onclick = () => lightbox.close();
 lightbox.addEventListener("click", e => { 
-  if (e.target === lightbox || e.target.classList.contains("lb-content")) lightbox.close(); 
+  if (e.target === lightbox || e.target.classList.contains("lb-stage")) lightbox.close(); 
 });
 lightbox.addEventListener("close", () => { lbImg.removeAttribute("src"); });
 
-// Keyboard controls
 document.addEventListener("keydown", e => {
   if (lightbox.open) {
     if (e.key === "ArrowLeft") showAt(current - 1);
@@ -586,6 +492,7 @@ document.addEventListener("keydown", e => {
 
 search.addEventListener("input", renderGallery);
 
+// Initialize
 loadImages();
 </script>
 </body>
