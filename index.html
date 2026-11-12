@@ -37,7 +37,10 @@ nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(5,5,6,.7);backdr
 .logo{font:600 20px var(--serif);letter-spacing:2px;color:var(--gold);text-decoration:none;text-transform:uppercase;display:flex;align-items:center;gap:12px;width:max-content}
 .logo svg{width:24px;height:24px;fill:none;stroke:var(--gold);stroke-width:1.5}
 
-.hero{height:55vh;min-height:400px;display:flex;justify-content:center;align-items:center;text-align:center;background:linear-gradient(transparent,rgba(5,5,6,.9));border-bottom:1px solid var(--border)}
+.hero{position:relative;z-index:95;height:55vh;min-height:400px;display:flex;justify-content:center;align-items:center;text-align:center;background:linear-gradient(transparent,rgba(5,5,6,.9))}
+.hero::before,.utility::after{content:"";position:absolute;bottom:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold) 50%,transparent)}
+.hero::before{left:8%;right:8%;box-shadow:0 0 14px var(--gold-glow)}
+.hero::after{content:"";position:absolute;left:50%;bottom:-4px;width:8px;height:8px;background:var(--base);border:1px solid var(--gold);transform:translateX(-50%) rotate(45deg);box-shadow:0 0 12px var(--gold-glow)}
 .hero-content{padding:0 20px;animation:up 1.2s var(--ease) both}
 .hero-sub{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:24px;display:block}
 .hero-title{font:500 clamp(32px,6vw,72px)/1.1 var(--serif);margin:0;text-shadow:0 4px 20px rgba(0,0,0,.8)}
@@ -49,6 +52,7 @@ nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(5,5,6,.7);backdr
 @keyframes up{from{opacity:0;transform:translateY(20px)}}
 
 .utility{max-width:1600px;margin:0 auto;padding:40px 40px 20px;display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:center;position:sticky;top:65px;z-index:90;background:rgba(5,5,6,.8);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.utility::after{left:40px;right:40px;opacity:.45}
 .search{position:relative;width:100%;max-width:400px}
 .search svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:18px;height:18px;stroke:var(--text-dim);fill:none;transition:stroke .4s}
 .search:focus-within svg{stroke:var(--gold)}
@@ -105,6 +109,7 @@ dialog[open]{animation:fade .5s var(--ease)}
 @media (max-width:768px){
   .hero-stats{gap:20px}
   .nav-inner,.utility,.container{padding-inline:20px}
+  .utility::after{left:20px;right:20px}
   #gallery{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
   .lb{padding:20px}
   .lb-nav{width:40px;height:40px}
