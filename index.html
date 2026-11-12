@@ -12,15 +12,15 @@
 <style>
   :root {
     --obsidian-base: #050506;
-    --obsidian-surface: rgba(17, 17, 20, 0.65);
-    --obsidian-raised: rgba(26, 26, 31, 0.8);
+    --obsidian-surface: rgba(17, 17, 20, 0.5); /* More transparent to show facets */
+    --obsidian-raised: rgba(26, 26, 31, 0.7);
     --gold-main: #D4AF37;
     --gold-light: #F3E5AB;
     --gold-muted: rgba(212, 175, 55, 0.4);
     --gold-glow: rgba(212, 175, 55, 0.15);
     --text-primary: #F7F7F7;
     --text-secondary: #A0A0A5;
-    --border-dim: rgba(255, 255, 255, 0.06);
+    --border-dim: rgba(255, 255, 255, 0.08);
     --font-serif: 'Playfair Display', serif;
     --font-sans: 'Montserrat', sans-serif;
     --ease-lux: cubic-bezier(0.4, 0, 0.2, 1);
@@ -31,51 +31,48 @@
   body { margin: 0; font-family: var(--font-sans); font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased; position: relative; }
   ::selection { background: var(--gold-main); color: var(--obsidian-base); }
 
-  /* ---------- Procedural Obsidian Texture ---------- */
+  /* ---------- High-Contrast Procedural Obsidian Texture ---------- */
   body::before {
     content: '';
     position: fixed;
-    inset: 0;
+    inset: -10vw; /* Oversized to prevent borders */
     z-index: -2;
-    /* 
-      1. SVG Noise for stone micro-texture 
-      2-5. Angular conic gradients for crystal facets catching light
-      6. Deep black/charcoal linear gradient base
-    */
-    background: 
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"),
-      conic-gradient(from 45deg at 20% 30%, rgba(255,255,255,0.02) 0deg, transparent 40deg),
-      conic-gradient(from 135deg at 80% 20%, rgba(212,175,55,0.015) 0deg, transparent 50deg),
-      conic-gradient(from 250deg at 70% 80%, rgba(255,255,255,0.015) 0deg, transparent 45deg),
-      conic-gradient(from 320deg at 30% 70%, rgba(255,255,255,0.02) 0deg, transparent 60deg),
-      linear-gradient(135deg, #0a0a0c 0%, #050506 100%);
-    background-size: 150px 150px, 300px 300px, 250px 400px, 400px 250px, 350px 350px, 100% 100%;
-    /* Blend the noise down so it's subtle and expensive looking */
-    background-blend-mode: overlay, normal, normal, normal, normal, normal;
-    opacity: 0.85;
+    background-color: #07070a;
+    background-image: 
+      /* Sharp shattering/gold reflections cutting across the screen */
+      linear-gradient(115deg, transparent 35%, rgba(212, 175, 55, 0.15) 35.2%, rgba(212, 175, 55, 0.03) 36%, transparent 38%),
+      linear-gradient(245deg, transparent 65%, rgba(255, 255, 255, 0.1) 65.2%, rgba(255, 255, 255, 0.02) 66%, transparent 68%),
+      linear-gradient(15deg, transparent 45%, rgba(255, 255, 255, 0.08) 45.1%, transparent 46%),
+      
+      /* Large Faceted Crystal Shapes */
+      conic-gradient(from 45deg at 30% 40%, #161622 0deg, #08080c 90deg, #20202e 180deg, #0b0b10 270deg, #161622 360deg),
+      conic-gradient(from -135deg at 70% 60%, #1c1c28 0deg, #050507 120deg, #262635 240deg, #1c1c28 360deg);
+    
+    background-size: 100% 100%, 100% 100%, 100% 100%, 50vw 50vh, 70vw 70vh;
+    background-blend-mode: screen, screen, screen, normal, overlay;
     pointer-events: none;
   }
   
-  /* Vignette to soften the texture at the edges of the screen */
+  /* Central vignette to ensure text remains highly readable over the shards */
   body::after {
     content: '';
     position: fixed;
     inset: 0;
     z-index: -1;
-    background: radial-gradient(circle at center, transparent 20%, rgba(5,5,6,0.95) 100%);
+    background: radial-gradient(circle at center, transparent 30%, rgba(5,5,6,0.95) 100%);
     pointer-events: none;
   }
 
   /* Custom Scrollbar */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--obsidian-base); }
-  ::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.3); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.4); border-radius: 10px; }
   ::-webkit-scrollbar-thumb:hover { background: var(--gold-main); }
 
   /* ---------- Navigation ---------- */
   nav {
     position: fixed; top: 0; width: 100%; z-index: 100;
-    background: rgba(5, 5, 6, 0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    background: rgba(5, 5, 6, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border-dim);
     transition: all 0.4s var(--ease-lux);
   }
@@ -103,12 +100,12 @@
   .hero-subtitle {
     font-family: var(--font-sans); font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
     color: var(--gold-main); margin-bottom: 24px; display: block;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+    text-shadow: 0 2px 10px rgba(0,0,0,0.9);
   }
   .hero-title {
     font-family: var(--font-serif); font-size: clamp(40px, 6vw, 72px); font-weight: 500;
     margin: 0; line-height: 1.1; color: var(--text-primary);
-    text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    text-shadow: 0 4px 20px rgba(0,0,0,0.8);
   }
   .hero-title i { color: var(--gold-light); font-style: italic; }
   
@@ -127,7 +124,7 @@
     max-width: 1600px; margin: 0 auto; padding: 40px 40px 20px;
     display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; align-items: center;
     position: sticky; top: 65px; z-index: 90; 
-    background: rgba(5,5,6,0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    background: rgba(5,5,6,0.75); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid transparent; transition: border-color 0.3s;
   }
 
@@ -138,12 +135,12 @@
   }
   .search-wrapper:focus-within svg { stroke: var(--gold-main); }
   #search {
-    width: 100%; background: rgba(17, 17, 20, 0.5); border: 1px solid var(--border-dim);
+    width: 100%; background: rgba(17, 17, 20, 0.6); border: 1px solid var(--border-dim);
     color: var(--text-primary); font-family: var(--font-sans); font-size: 13px;
     padding: 12px 16px 12px 44px; border-radius: 4px; transition: all 0.4s var(--ease-lux);
     backdrop-filter: blur(4px);
   }
-  #search:focus { outline: none; border-color: var(--gold-main); box-shadow: 0 0 15px var(--gold-glow); background: rgba(17,17,20,0.8); }
+  #search:focus { outline: none; border-color: var(--gold-main); box-shadow: 0 0 15px var(--gold-glow); background: rgba(17,17,20,0.9); }
   #search::placeholder { color: var(--text-secondary); }
 
   .filter-tabs {
@@ -151,12 +148,12 @@
   }
   .filter-tabs::-webkit-scrollbar { display: none; }
   .tab {
-    background: rgba(17, 17, 20, 0.4); border: 1px solid var(--border-dim); color: var(--text-secondary);
+    background: rgba(17, 17, 20, 0.5); border: 1px solid var(--border-dim); color: var(--text-secondary);
     padding: 8px 24px; border-radius: 40px; font-family: var(--font-sans); font-size: 12px;
     letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.4s var(--ease-lux);
     white-space: nowrap; backdrop-filter: blur(4px);
   }
-  .tab:hover { border-color: var(--gold-muted); color: var(--text-primary); background: rgba(17,17,20,0.8); }
+  .tab:hover { border-color: var(--gold-muted); color: var(--text-primary); background: rgba(17,17,20,0.9); }
   .tab.active { background: var(--gold-main); border-color: var(--gold-main); color: var(--obsidian-base); font-weight: 500; }
 
   /* ---------- Gallery Grid ---------- */
@@ -168,12 +165,12 @@
   .card {
     background: var(--obsidian-surface); border: 1px solid var(--border-dim);
     border-radius: 6px; overflow: hidden; display: flex; flex-direction: column;
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     transition: all 0.5s var(--ease-lux);
   }
   .card:hover {
     border-color: var(--gold-muted); transform: translateY(-4px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 20px var(--gold-glow);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 20px var(--gold-glow);
     background: rgba(26, 26, 31, 0.9);
   }
 
@@ -237,13 +234,13 @@
   .lb-close svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 1.5; }
 
   .lb-stage { flex: 1; position: relative; display: flex; justify-content: center; align-items: center; min-height: 0; }
-  .lb-stage img { max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: 0 20px 60px rgba(0,0,0,0.8); }
+  .lb-stage img { max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: 0 20px 60px rgba(0,0,0,0.9); }
 
   .lb-nav {
     position: absolute; top: 50%; transform: translateY(-50%);
-    background: rgba(17, 17, 20, 0.6); border: 1px solid var(--border-dim); color: var(--gold-main);
+    background: rgba(17, 17, 20, 0.8); border: 1px solid var(--border-dim); color: var(--gold-main);
     width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
-    backdrop-filter: blur(8px); transition: all 0.3s;
+    backdrop-filter: blur(12px); transition: all 0.3s;
   }
   .lb-nav:hover { background: var(--gold-main); color: var(--obsidian-base); }
   .lb-nav.prev { left: 0; } .lb-nav.next { right: 0; }
