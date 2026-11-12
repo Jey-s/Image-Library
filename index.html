@@ -48,83 +48,95 @@
 
   .wrap { max-width: 1480px; margin: 0 auto; padding: 0 clamp(18px, 4vw, 48px); }
 
-  /* ---------- Header ---------- */
-  header { padding: clamp(48px, 9vw, 104px) 0 clamp(28px, 4vw, 44px); }
+  /* ---------- Hero ---------- */
+  header { padding: clamp(44px, 8vw, 96px) 0 clamp(32px, 5vw, 56px); }
+
+  .hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 40px; align-items: center; }
 
   h1 {
-    margin: 0;
-    font-family: var(--serif);
-    font-weight: 450;
-    font-size: clamp(46px, 9vw, 104px);
-    line-height: .96;
-    letter-spacing: -0.025em;
+    margin: 0; font-family: var(--serif); font-weight: 450;
+    font-size: clamp(46px, 8vw, 96px); line-height: .96; letter-spacing: -0.025em;
     font-variation-settings: "opsz" 144;
   }
 
-  #status {
-    margin: 20px 0 0;
-    max-width: 52ch;
-    color: var(--muted);
-    font-size: 17px;
+  #status { margin: 22px 0 0; max-width: 34ch; color: var(--paper); opacity: .78; font: italic 400 clamp(20px, 2.2vw, 26px)/1.3 var(--serif); }
+
+  .facts { list-style: none; margin: 24px 0 0; padding: 0; display: flex; gap: 10px; flex-wrap: wrap; }
+  .facts li {
+    display: flex; align-items: center; gap: 8px; padding: 6px 15px 6px 12px;
+    border: 1px solid var(--line); border-radius: 999px; font-size: 14px; color: var(--muted);
+    background: color-mix(in srgb, var(--raised) 60%, transparent);
   }
+  .facts i { width: 8px; height: 8px; border-radius: 50%; }
+  .facts b { color: var(--paper); font-weight: 600; }
+
+  .how { list-style: none; margin: 34px 0 0; padding: 0; display: grid; gap: 12px; }
+  .how li { display: flex; align-items: center; gap: 13px; font-size: 15px; }
+  .how span {
+    flex: none; width: 32px; height: 32px; display: grid; place-items: center;
+    border-radius: 10px; background: var(--raised); border: 1px solid var(--line);
+  }
+  .how svg { width: 16px; height: 16px; stroke: var(--sage); fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* A hand-laid stack of prints, made from your own library */
+  .stack { position: relative; height: 390px; width: 100%; max-width: 480px; justify-self: end; }
+  .tile {
+    position: absolute; left: var(--x); top: var(--y); rotate: var(--r);
+    width: 45%; aspect-ratio: 4 / 5; object-fit: cover; display: block;
+    border: 6px solid var(--paper); border-radius: 14px; background: var(--raised);
+    box-shadow: 0 22px 44px rgba(0,0,0,.38);
+    animation: settle .9s cubic-bezier(.2,.8,.2,1) backwards;
+    animation-delay: calc(var(--i) * 110ms);
+    transition: translate .35s cubic-bezier(.2,.8,.2,1);
+  }
+  .tile:hover { translate: 0 -8px; z-index: 2; }
+  .tile:nth-child(1) { --x: 0%;  --y: 14%; --r: -6deg; }
+  .tile:nth-child(2) { --x: 29%; --y: 0%;  --r: 3deg; }
+  .tile:nth-child(3) { --x: 55%; --y: 20%; --r: 7deg; }
+  .tile:nth-child(4) { --x: 22%; --y: 46%; --r: -2deg; }
+  @keyframes settle { from { opacity: 0; translate: 0 36px; rotate: 0deg; } }
 
   /* ---------- Bar ---------- */
   .bar {
     position: sticky; top: 0; z-index: 10;
-    background: color-mix(in srgb, var(--bg) 82%, transparent);
-    backdrop-filter: blur(14px) saturate(1.1);
-    -webkit-backdrop-filter: blur(14px) saturate(1.1);
-    border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--bg) 84%, transparent);
+    backdrop-filter: blur(14px) saturate(1.1); -webkit-backdrop-filter: blur(14px) saturate(1.1);
+    border-block: 1px solid var(--line);
   }
+  .bar .wrap { display: flex; align-items: center; gap: 12px 24px; flex-wrap: wrap; padding-top: 14px; padding-bottom: 14px; }
 
-  .bar .wrap {
-    display: flex; align-items: center; gap: 12px 32px; flex-wrap: wrap;
-    padding-top: 12px; padding-bottom: 12px;
-  }
-
-  .search { position: relative; flex: 1 1 260px; max-width: 420px; }
+  .search { position: relative; flex: 1 1 280px; max-width: 440px; }
   .search svg {
-    position: absolute; left: 2px; top: 50%; translate: 0 -50%;
-    width: 18px; height: 18px; stroke: var(--muted); fill: none; stroke-width: 1.8;
-    stroke-linecap: round; pointer-events: none; transition: stroke .2s;
+    position: absolute; left: 15px; top: 50%; translate: 0 -50%; width: 18px; height: 18px;
+    stroke: var(--muted); fill: none; stroke-width: 1.8; stroke-linecap: round; pointer-events: none; transition: stroke .2s;
   }
   .search:focus-within svg { stroke: var(--sage); }
-
   #search {
-    width: 100%; padding: 9px 34px 9px 30px;
-    background: transparent; border: 0; border-bottom: 1px solid var(--line);
-    color: var(--paper); font: inherit; font-size: 16px; border-radius: 0;
-    transition: border-color .2s;
+    width: 100%; height: 46px; padding: 0 44px 0 44px; border-radius: 13px;
+    background: var(--raised); border: 1px solid var(--line); color: var(--paper);
+    font: inherit; font-size: 16px; transition: border-color .2s, box-shadow .2s;
   }
   #search::placeholder { color: var(--muted); }
-  #search:focus { outline: none; border-color: var(--sage); }
+  #search:focus { outline: none; border-color: var(--sage); box-shadow: 0 0 0 4px color-mix(in srgb, var(--sage) 16%, transparent); }
   #search::-webkit-search-cancel-button { display: none; }
-
   .hint {
-    position: absolute; right: 0; top: 50%; translate: 0 -50%;
-    font-size: 12px; color: var(--muted); border: 1px solid var(--line);
-    border-radius: 5px; padding: 0 6px; pointer-events: none;
+    position: absolute; right: 12px; top: 50%; translate: 0 -50%; font-size: 12px; color: var(--muted);
+    border: 1px solid var(--line); border-radius: 6px; padding: 1px 7px; pointer-events: none;
   }
 
-  .tabs { display: flex; gap: 6px 22px; flex-wrap: wrap; flex: 1 1 auto; }
-
+  .tabs { display: flex; gap: 4px; flex-wrap: wrap; padding: 4px; border-radius: 13px; background: var(--raised); border: 1px solid var(--line); }
   .tab {
-    position: relative; background: none; border: 0; padding: 8px 0;
-    color: var(--muted); font: 500 15px var(--sans); cursor: pointer;
-    transition: color .2s;
+    height: 36px; padding: 0 16px; border: 0; border-radius: 9px; background: none;
+    color: var(--muted); font: 500 15px var(--sans); cursor: pointer; transition: color .2s, background .2s;
   }
-  .tab sup { font-size: 11px; margin-left: 3px; opacity: .7; }
-  .tab::after {
-    content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 2px;
-    background: var(--sage); border-radius: 2px;
-    scale: 0 1; transition: scale .25s ease;
-  }
+  .tab sup { font-size: 11px; margin-left: 5px; opacity: .75; }
   .tab:hover { color: var(--paper); }
-  .tab[aria-pressed="true"] { color: var(--paper); }
-  .tab[aria-pressed="true"]::after { scale: 1 1; }
+  .tab[aria-pressed="true"] { color: var(--paper); background: color-mix(in srgb, var(--sage) 24%, var(--bg)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--sage) 45%, transparent); }
 
-  .size { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 13px; }
-  .size input { width: 110px; accent-color: var(--sage); }
+  .size { display: flex; align-items: center; gap: 10px; margin-left: auto; color: var(--muted); }
+  .size svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+  .size svg:last-child { width: 20px; height: 20px; }
+  .size input { width: 120px; accent-color: var(--sage); }
 
   /* ---------- Gallery (masonry keeps true proportions) ---------- */
   main { padding: clamp(24px, 3vw, 40px) 0 120px; }
@@ -241,12 +253,13 @@
   .icon:focus-visible { border-radius: 50%; }
 
   @media (prefers-reduced-motion: reduce) {
-    * { transition-duration: .01ms !important; scroll-behavior: auto !important; }
+    * { transition-duration: .01ms !important; animation: none !important; scroll-behavior: auto !important; }
   }
 
   @media (max-width: 640px) {
     :root { --col: 150px; --gap: 12px; }
-    .size, .hint { display: none; }
+    .size, .hint, .stack { display: none; }
+    .hero { grid-template-columns: 1fr; }
     .nav { width: 40px; height: 40px; }
     .nav.prev { left: 0; } .nav.next { right: 0; }
   }
@@ -256,22 +269,33 @@
 <body>
 
 <header>
-  <div class="wrap">
-    <h1>My Image Library</h1>
-    <p id="status">Gathering your images…</p>
+  <div class="wrap hero">
+    <div>
+      <h1>My Image Library</h1>
+      <p id="status">Gathering your images…</p>
+      <ul class="facts" id="facts"></ul>
+      <ul class="how">
+        <li><span><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/></svg></span>Hover an image to copy its link</li>
+        <li><span><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></span>Click it to view full screen</li>
+        <li><span><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span>Press / to search by name</li>
+      </ul>
+    </div>
+    <div class="stack" id="stack" aria-hidden="true"></div>
   </div>
 </header>
 
 <div class="bar">
   <div class="wrap">
     <label class="search">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input id="search" type="search" placeholder="Search by name" autocomplete="off" aria-label="Search images and GIFs">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="search" type="search" placeholder="Search your library" autocomplete="off" aria-label="Search images and GIFs">
       <span class="hint" aria-hidden="true">/</span>
     </label>
     <div class="tabs" id="tabs" role="group" aria-label="Filter by folder"></div>
-    <label class="size">Size
+    <label class="size" title="Thumbnail size">
+      <svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
       <input id="size" type="range" min="150" max="420" step="10" value="250" aria-label="Thumbnail size">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/></svg>
     </label>
   </div>
 </div>
@@ -358,6 +382,7 @@ async function loadImages() {
     if (data.truncated) throw new Error("Repository is too large to scan completely.");
     items = data.tree.filter(f => f.type === "blob" && EXTENSIONS.test(f.path));
     renderTabs();
+    renderHero();
     renderGallery();
   } catch (error) {
     statusEl.textContent = error.message;
@@ -378,6 +403,17 @@ function renderTabs() {
   });
 }
 
+function renderHero() {
+  const gifs = items.filter(f => /\.gif$/i.test(f.path)).length;
+  const folders = new Set(items.map(f => folderOf(f.path))).size;
+  $("facts").innerHTML = [["sage", items.length - gifs, "image"], ["apricot", gifs, "GIF"], ["paper", folders, "folder"]]
+    .filter(f => f[1])
+    .map(([c, n, w]) => `<li><i style="background:var(--${c})"></i><b>${n}</b> ${w}${n === 1 ? "" : "s"}</li>`).join("");
+  const n = Math.min(4, items.length);
+  $("stack").innerHTML = Array.from({ length: n }, (_, k) => items[Math.floor(k * items.length / n)])
+    .map((f, k) => `<img class="tile" style="--i:${k}" src="${urlFor(f.path)}" alt="">`).join("");
+}
+
 function iconBtn(label, html, onclick) {
   const b = document.createElement("button");
   b.className = "icon"; b.type = "button";
@@ -396,7 +432,7 @@ function renderGallery() {
     ? "No images found in this repository yet."
     : (q || activeFolder !== "All")
       ? `Showing ${view.length} of ${items.length}.`
-      : `${items.length} images and GIFs. Hover one to copy its link.`;
+      : "Every image and GIF you've saved, one click from a shareable link.";
 
   gallery.innerHTML = "";
   if (!view.length) {
