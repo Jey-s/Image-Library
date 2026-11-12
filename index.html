@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#14191c">
 <title>My Image Library</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2314191c'/%3E%3Crect x='14' y='14' width='22' height='30' rx='5' fill='%239fc5b0'/%3E%3Crect x='30' y='24' width='22' height='26' rx='5' fill='%23e8b383'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,37 +12,29 @@
 
 <style>
   :root {
-    --bg: #14191c;
-    --raised: #1b2227;
-    --line: #2b343a;
-    --paper: #e9e6dd;
-    --muted: #8d999c;
-    --sage: #9fc5b0;
-    --apricot: #e8b383;
+    --bg: #14191c; --raised: #1b2227; --line: #2b343a;
+    --paper: #e9e6dd; --muted: #8d999c; --sage: #9fc5b0; --apricot: #e8b383;
     --serif: "Fraunces", Georgia, "Times New Roman", serif;
     --sans: "Figtree", "Segoe UI", Arial, sans-serif;
-    --col: 250px;
-    --gap: 18px;
+    --col: 250px; --gap: 18px;
   }
 
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; color-scheme: dark; }
+  html { scroll-behavior: smooth; color-scheme: dark; scrollbar-gutter: stable; }
+  html:has(dialog[open]) { overflow: hidden; }
   ::selection { background: color-mix(in srgb, var(--sage) 35%, transparent); }
 
   body {
-    margin: 0;
-    min-height: 100vh;
+    margin: 0; min-height: 100vh;
     background:
       radial-gradient(900px 420px at 12% -80px, color-mix(in srgb, var(--sage) 9%, transparent), transparent 70%),
       radial-gradient(700px 380px at 92% -120px, color-mix(in srgb, var(--apricot) 7%, transparent), transparent 70%),
       var(--bg);
     background-repeat: no-repeat;
-    color: var(--paper);
-    font: 400 15px/1.55 var(--sans);
+    color: var(--paper); font: 400 15px/1.55 var(--sans);
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Calm, thin scrollbars */
   * { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
   ::-webkit-scrollbar { width: 10px; }
   ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 10px; border: 2px solid var(--bg); }
@@ -50,15 +43,13 @@
 
   /* ---------- Hero ---------- */
   header { padding: clamp(44px, 8vw, 96px) 0 clamp(32px, 5vw, 56px); }
-
   .hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 40px; align-items: center; }
 
   h1 {
     margin: 0; font-family: var(--serif); font-weight: 450;
     font-size: clamp(46px, 8vw, 96px); line-height: .96; letter-spacing: -0.025em;
-    font-variation-settings: "opsz" 144;
+    font-variation-settings: "opsz" 144; text-wrap: balance;
   }
-
   #status { margin: 22px 0 0; max-width: 34ch; color: var(--paper); opacity: .78; font: italic 400 clamp(20px, 2.2vw, 26px)/1.3 var(--serif); }
 
   .facts { list-style: none; margin: 24px 0 0; padding: 0; display: flex; gap: 10px; flex-wrap: wrap; }
@@ -78,22 +69,23 @@
   }
   .how svg { width: 16px; height: 16px; stroke: var(--sage); fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
 
-  /* A hand-laid stack of prints, made from your own library */
+  /* Prints made from your own library; they follow the pointer, each at its own depth */
   .stack { position: relative; height: 390px; width: 100%; max-width: 480px; justify-self: end; }
   .tile {
     position: absolute; left: var(--x); top: var(--y); rotate: var(--r);
+    transform: translate(calc(var(--mx, 0) * var(--d, 24) * 1px), calc(var(--my, 0) * var(--d, 24) * 1px));
     width: 45%; aspect-ratio: 4 / 5; object-fit: cover; display: block;
     border: 6px solid var(--paper); border-radius: 14px; background: var(--raised);
     box-shadow: 0 22px 44px rgba(0,0,0,.38);
     animation: settle .9s cubic-bezier(.2,.8,.2,1) backwards;
     animation-delay: calc(var(--i) * 110ms);
-    transition: translate .35s cubic-bezier(.2,.8,.2,1);
+    transition: translate .35s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1);
   }
   .tile:hover { translate: 0 -8px; z-index: 2; }
-  .tile:nth-child(1) { --x: 0%;  --y: 14%; --r: -6deg; }
-  .tile:nth-child(2) { --x: 29%; --y: 0%;  --r: 3deg; }
-  .tile:nth-child(3) { --x: 55%; --y: 20%; --r: 7deg; }
-  .tile:nth-child(4) { --x: 22%; --y: 46%; --r: -2deg; }
+  .tile:nth-child(1) { --x: 0%;  --y: 14%; --r: -6deg; --d: -34; }
+  .tile:nth-child(2) { --x: 29%; --y: 0%;  --r: 3deg;  --d: 20; }
+  .tile:nth-child(3) { --x: 55%; --y: 20%; --r: 7deg;  --d: 44; }
+  .tile:nth-child(4) { --x: 22%; --y: 46%; --r: -2deg; --d: -16; }
   @keyframes settle { from { opacity: 0; translate: 0 36px; rotate: 0deg; } }
 
   /* ---------- Bar ---------- */
@@ -112,7 +104,7 @@
   }
   .search:focus-within svg { stroke: var(--sage); }
   #search {
-    width: 100%; height: 46px; padding: 0 44px 0 44px; border-radius: 13px;
+    width: 100%; height: 46px; padding: 0 44px; border-radius: 13px;
     background: var(--raised); border: 1px solid var(--line); color: var(--paper);
     font: inherit; font-size: 16px; transition: border-color .2s, box-shadow .2s;
   }
@@ -121,8 +113,9 @@
   #search::-webkit-search-cancel-button { display: none; }
   .hint {
     position: absolute; right: 12px; top: 50%; translate: 0 -50%; font-size: 12px; color: var(--muted);
-    border: 1px solid var(--line); border-radius: 6px; padding: 1px 7px; pointer-events: none;
+    border: 1px solid var(--line); border-radius: 6px; padding: 1px 7px; pointer-events: none; transition: opacity .2s;
   }
+  #search:not(:placeholder-shown) ~ .hint { opacity: 0; }
 
   .tabs { display: flex; gap: 4px; flex-wrap: wrap; padding: 4px; border-radius: 13px; background: var(--raised); border: 1px solid var(--line); }
   .tab {
@@ -140,47 +133,36 @@
 
   /* ---------- Gallery (masonry keeps true proportions) ---------- */
   main { padding: clamp(24px, 3vw, 40px) 0 120px; }
-
   #gallery { column-width: var(--col); column-gap: var(--gap); }
 
-  figure {
-    position: relative; margin: 0 0 var(--gap);
-    break-inside: avoid;
-    border-radius: 12px; overflow: hidden;
-    background: var(--raised);
-  }
-
-  .frame {
-    display: block; width: 100%; padding: 0; border: 0; background: none;
-    cursor: zoom-in; line-height: 0;
-  }
-  .frame img {
-    width: 100%; height: auto; display: block;
-    opacity: 0; transition: opacity .5s ease, transform .6s cubic-bezier(.2,.7,.2,1);
-  }
+  figure { position: relative; margin: 0 0 var(--gap); break-inside: avoid; border-radius: 12px; overflow: hidden; background: var(--raised); }
+  .frame { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; line-height: 0; }
+  .frame:focus-visible { outline-offset: -4px; border-radius: 12px; }
+  .frame img { width: 100%; height: auto; display: block; opacity: 0; transition: opacity .5s ease, transform .6s cubic-bezier(.2,.7,.2,1); }
   .frame img.ready { opacity: 1; }
   figure:hover .frame img.ready { transform: scale(1.025); }
-
-  /* Tiny placeholder height while an image is still loading */
   .loading { min-height: 140px; }
+
+  /* Placeholders while the library loads */
+  .sk::before {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(100deg, transparent 40%, rgba(233,230,221,.07) 50%, transparent 60%) 150% 0 / 200% 100% no-repeat;
+    animation: sweep 1.6s linear infinite;
+  }
+  @keyframes sweep { to { background-position: -50% 0; } }
 
   .cap {
     position: absolute; inset: auto 0 0 0; padding: 38px 12px 11px 14px;
     display: flex; align-items: flex-end; justify-content: space-between; gap: 10px;
     background: linear-gradient(to top, rgba(10,13,15,.84), rgba(10,13,15,0));
-    opacity: 0; transition: opacity .25s;
-    pointer-events: none;
+    opacity: 0; transition: opacity .25s; pointer-events: none;
   }
   figure:hover .cap, figure:focus-within .cap { opacity: 1; }
   @media (hover: none) { .cap { opacity: 1; } }
 
   .cap-text { min-width: 0; line-height: 1.25; }
-  .cap-name {
-    font-size: 13.5px; font-weight: 500;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
+  .cap-name { font-size: 13.5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .cap-folder { font-size: 12px; color: var(--sage); }
-
   .cap-actions { display: flex; gap: 6px; pointer-events: auto; flex: none; }
 
   .icon {
@@ -194,36 +176,29 @@
   .icon.ok { background: var(--apricot); color: #2d1b0b; }
   .icon svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
 
-  .empty {
-    column-span: all; padding: 90px 0; text-align: center; color: var(--muted);
-    font: italic 400 24px var(--serif);
-  }
+  .empty { column-span: all; padding: 90px 0; text-align: center; color: var(--muted); font: italic 400 24px var(--serif); }
 
   /* ---------- Lightbox ---------- */
   dialog {
     border: 0; padding: 0; background: transparent; color: var(--paper);
-    width: 100vw; max-width: 100vw; height: 100vh; max-height: 100vh;
+    width: 100vw; max-width: 100vw; height: 100vh; max-height: 100vh; height: 100dvh; max-height: 100dvh;
   }
   dialog::backdrop { background: rgba(10,13,15,.93); backdrop-filter: blur(10px); }
+  dialog[open], dialog[open]::backdrop { animation: veil .25s ease; }
+  @keyframes veil { from { opacity: 0; } }
 
-  .lb { height: 100%; display: grid; grid-template-rows: 1fr auto; padding: 22px clamp(14px, 4vw, 56px) 22px; gap: 16px; }
-
+  .lb { height: 100%; display: grid; grid-template-rows: 1fr auto; padding: 22px clamp(14px, 4vw, 56px); gap: 16px; }
   .lb-stage { position: relative; min-height: 0; display: grid; place-items: center; }
-  .lb-stage img {
-    max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 10px;
-    box-shadow: 0 30px 80px rgba(0,0,0,.45);
-  }
+  .lb-stage img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 10px; box-shadow: 0 30px 80px rgba(0,0,0,.45); }
 
-  .nav {
-    position: absolute; top: 50%; translate: 0 -50%;
-    width: 48px; height: 48px;
-  }
+  .nav { position: absolute; top: 50%; translate: 0 -50%; width: 48px; height: 48px; }
   .nav.prev { left: -8px; } .nav.next { right: -8px; }
   .nav svg { width: 20px; height: 20px; }
 
   .lb-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
   .lb-name { margin: 0; font: italic 400 22px/1.25 var(--serif); overflow-wrap: anywhere; }
   .lb-count { color: var(--muted); font-size: 13px; margin-top: 2px; }
+  .lb-count span { margin-left: 12px; padding-left: 12px; border-left: 1px solid var(--line); }
 
   .pill {
     display: inline-flex; align-items: center; gap: 8px;
@@ -254,6 +229,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     * { transition-duration: .01ms !important; animation: none !important; scroll-behavior: auto !important; }
+    dialog[open]::backdrop { animation: none; }
   }
 
   @media (max-width: 640px) {
@@ -272,7 +248,7 @@
   <div class="wrap hero">
     <div>
       <h1>My Image Library</h1>
-      <p id="status">Gathering your images…</p>
+      <p id="status" aria-live="polite">Gathering your images…</p>
       <ul class="facts" id="facts"></ul>
       <ul class="how">
         <li><span><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/></svg></span>Hover an image to copy its link</li>
@@ -343,13 +319,20 @@ const EXTENSIONS = /\.(jpg|jpeg|png|gif|webp|avif|svg|bmp)$/i;
 
 const $ = id => document.getElementById(id);
 const gallery = $("gallery"), statusEl = $("status"), search = $("search"),
-      tabsEl = $("tabs"), lightbox = $("lightbox"), toast = $("toast"), size = $("size");
+      tabsEl = $("tabs"), lightbox = $("lightbox"), toast = $("toast"), size = $("size"),
+      lbImg = $("lbImg"), lbCopy = $("lbCopy"), COPY_HTML = lbCopy.innerHTML;
 
 const ICON_COPY = '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/></svg>';
 const ICON_OPEN = '<svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg>';
 const ICON_OK = '<svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
 
-let items = [], view = [], activeFolder = "All", current = 0, toastTimer;
+const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const FAILS = {
+  403: "GitHub is limiting requests from this network. Wait a few minutes, then reload.",
+  404: "Repository or branch not found. Check USERNAME, REPOSITORY and BRANCH in the script."
+};
+
+let items = [], view = [], activeFolder = "All", current = 0, toastTimer, empty;
 
 const urlFor = p => BASE_URL + p.split("/").map(encodeURIComponent).join("/");
 const folderOf = p => p.includes("/") ? p.split("/")[0] : "Root";
@@ -376,15 +359,17 @@ async function copyLink(path, btn, idleHTML) {
 async function loadImages() {
   try {
     const api = `https://api.github.com/repos/${USERNAME}/${REPOSITORY}/git/trees/${encodeURIComponent(BRANCH)}?recursive=1`;
-    const response = await fetch(api);
-    if (!response.ok) throw new Error(`Could not access repository (HTTP ${response.status}).`);
+    const response = await fetch(api).catch(() => { throw new Error("Could not reach GitHub. Check your connection, then reload."); });
+    if (!response.ok) throw new Error(FAILS[response.status] || `GitHub returned an error (HTTP ${response.status}). Reload to try again.`);
     const data = await response.json();
-    if (data.truncated) throw new Error("Repository is too large to scan completely.");
+    if (data.truncated) throw new Error("This repository is too large to list in full. Split the images across two repositories.");
     items = data.tree.filter(f => f.type === "blob" && EXTENSIONS.test(f.path));
     renderTabs();
     renderHero();
+    buildGallery();
     renderGallery();
   } catch (error) {
+    gallery.innerHTML = "";
     statusEl.textContent = error.message;
   }
 }
@@ -422,31 +407,13 @@ function iconBtn(label, html, onclick) {
   return b;
 }
 
-function renderGallery() {
-  const q = search.value.trim().toLowerCase();
-  view = items.filter(f =>
-    (activeFolder === "All" || folderOf(f.path) === activeFolder) &&
-    f.path.toLowerCase().includes(q));
-
-  statusEl.textContent = !items.length
-    ? "No images found in this repository yet."
-    : (q || activeFolder !== "All")
-      ? `Showing ${view.length} of ${items.length}.`
-      : "Every image and GIF you've saved, one click from a shareable link.";
-
+// Cards are built once; filtering only shows or hides them, so images never reload
+function buildGallery() {
   gallery.innerHTML = "";
-  if (!view.length) {
-    const e = document.createElement("div");
-    e.className = "empty";
-    e.textContent = "Nothing matches that search.";
-    gallery.appendChild(e);
-    return;
-  }
-
-  view.forEach((file, i) => {
+  items.forEach(file => {
     const parts = file.path.split("/"), base = parts.pop();
 
-    const fig = document.createElement("figure");
+    const fig = file.el = document.createElement("figure");
     fig.className = "loading";
 
     const frame = document.createElement("button");
@@ -458,7 +425,7 @@ function renderGallery() {
     img.onload = done; img.onerror = done;
     img.src = urlFor(file.path);
     frame.appendChild(img);
-    frame.onclick = () => openLightbox(i);
+    frame.onclick = () => openLightbox(view.indexOf(file));
 
     const cap = document.createElement("div");
     cap.className = "cap";
@@ -478,21 +445,53 @@ function renderGallery() {
     fig.append(frame, cap);
     gallery.appendChild(fig);
   });
+
+  empty = document.createElement("div");
+  empty.className = "empty"; empty.hidden = true;
+  gallery.appendChild(empty);
+}
+
+function renderGallery() {
+  if (!empty) return;
+  const q = search.value.trim().toLowerCase();
+  view = items.filter(f =>
+    (activeFolder === "All" || folderOf(f.path) === activeFolder) &&
+    f.path.toLowerCase().includes(q));
+  const shown = new Set(view);
+  items.forEach(f => { f.el.hidden = !shown.has(f); });
+
+  statusEl.textContent = !items.length
+    ? `No images found on the ${BRANCH} branch. Add files there, then reload.`
+    : (q || activeFolder !== "All")
+      ? `Showing ${view.length} of ${items.length}.`
+      : "Every image and GIF you've saved, one click from a shareable link.";
+
+  empty.hidden = view.length > 0 || !items.length;
+  empty.textContent = q
+    ? `No matches for “${search.value.trim()}”. Try a shorter name or another folder.`
+    : "This folder has no images.";
 }
 
 /* ---------- Lightbox ---------- */
-const lbCopy = $("lbCopy"), COPY_HTML = lbCopy.innerHTML;
-
 function showAt(i) {
   if (!view.length) return;
   current = (i + view.length) % view.length;
   const f = view[current];
-  $("lbImg").src = urlFor(f.path);
-  $("lbImg").alt = f.path;
+  lbImg.src = urlFor(f.path);
+  lbImg.alt = f.path;
   $("lbName").textContent = f.path;
   $("lbCount").textContent = `${current + 1} of ${view.length}`;
   lbCopy.onclick = () => copyLink(f.path, lbCopy, COPY_HTML);
+  // Warm up the neighbours so the arrow keys feel instant
+  [1, -1].forEach(d => { new Image().src = urlFor(view[(current + d + view.length) % view.length].path); });
 }
+
+// Once the picture is ready: show its pixel size and settle it into place
+lbImg.onload = () => {
+  const { naturalWidth: w, naturalHeight: h } = lbImg;
+  if (w) $("lbCount").innerHTML = `${current + 1} of ${view.length}<span>${w} × ${h} px</span>`;
+  if (!calm) lbImg.animate({ opacity: [0, 1], scale: [.96, 1] }, { duration: 320, easing: "cubic-bezier(.2,.8,.2,1)" });
+};
 
 function openLightbox(i) { showAt(i); lightbox.showModal(); }
 
@@ -500,7 +499,14 @@ $("prev").onclick = () => showAt(current - 1);
 $("next").onclick = () => showAt(current + 1);
 $("lbClose").onclick = () => lightbox.close();
 lightbox.addEventListener("click", e => { if (e.target === lightbox || e.target.classList.contains("lb-stage")) lightbox.close(); });
-lightbox.addEventListener("close", () => { $("lbImg").removeAttribute("src"); });
+lightbox.addEventListener("close", () => { lbImg.removeAttribute("src"); });
+
+let touchX = 0;
+lightbox.addEventListener("touchstart", e => { touchX = e.changedTouches[0].clientX; }, { passive: true });
+lightbox.addEventListener("touchend", e => {
+  const dx = e.changedTouches[0].clientX - touchX;
+  if (Math.abs(dx) > 50) showAt(current + (dx < 0 ? 1 : -1));
+}, { passive: true });
 
 document.addEventListener("keydown", e => {
   if (lightbox.open) {
@@ -513,6 +519,9 @@ document.addEventListener("keydown", e => {
 
 /* ---------- Controls ---------- */
 search.addEventListener("input", renderGallery);
+search.addEventListener("keydown", e => {
+  if (e.key === "Escape") { search.value = ""; search.blur(); renderGallery(); }
+});
 
 const applySize = v => document.documentElement.style.setProperty("--col", v + "px");
 try { const s = localStorage.getItem("thumbSize"); if (s) { size.value = s; applySize(s); } } catch {}
@@ -520,6 +529,27 @@ size.addEventListener("input", () => {
   applySize(size.value);
   try { localStorage.setItem("thumbSize", size.value); } catch {}
 });
+
+/* ---------- Hero: prints drift with the mouse ---------- */
+if (matchMedia("(hover: hover)").matches && !calm) {
+  const hero = document.querySelector("header"), stack = $("stack");
+  const aim = (x, y) => { stack.style.setProperty("--mx", x); stack.style.setProperty("--my", y); };
+  hero.addEventListener("pointermove", e => {
+    const r = hero.getBoundingClientRect();
+    aim(((e.clientX - r.left) / r.width - .5).toFixed(3), ((e.clientY - r.top) / r.height - .5).toFixed(3));
+  });
+  hero.addEventListener("pointerleave", () => aim(0, 0));
+}
+
+// Touch screens have no hover, so say what to tap instead
+if (matchMedia("(hover: none)").matches) {
+  ["Tap the copy icon on an image to copy its link", "Tap an image to view it full screen", "Search by name from the bar below"]
+    .forEach((t, i) => { document.querySelectorAll(".how li")[i].lastChild.textContent = t; });
+}
+
+// Placeholders until the library arrives
+gallery.innerHTML = [200, 270, 160, 240, 300, 180, 250, 210]
+  .map(h => `<figure class="sk" style="height:${h}px" aria-hidden="true"></figure>`).join("");
 
 loadImages();
 
